@@ -11,7 +11,7 @@ require('dotenv').config();
 
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true }).then(()=>{console.log('Connected to MongoDB')});;
 // var nameSchema = new mongoose.Schema({
 //     avenger: String,
 //     weapon: String,
