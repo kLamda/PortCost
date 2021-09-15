@@ -15,7 +15,7 @@ export default function App() {
     // </SafeAreaView>
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Start" component={StartPage} />
+        <Stack.Screen name="Start" component={StartPage} options={{ headerShown: false }} />
         <Stack.Screen name="Result" component={EndPage} />
       </Stack.Navigator>
     </NavigationContainer>
