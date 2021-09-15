@@ -1132,6 +1132,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@expo-google-fonts/nunito-sans@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/nunito-sans/-/nunito-sans-0.2.0.tgz#87b005294ca9c8d4aecee96666bb1fe7340a1aa0"
+  integrity sha512-fFrlTdm5Dl6VraCw1yvEJ+tXLZEmg6jXXrMavLZR4Zyh6zmSjq8Ww1o/JVD36gHQInL1WQRLufN1p9qwoLgEVQ==
+
 "@expo/config-plugins@2.0.4":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-2.0.4.tgz#955fd70a2aeefbe99ec71cecb1d7ea7b626dc79e"
@@ -4775,6 +4780,19 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-custom-dropdown@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-custom-dropdown/-/react-native-custom-dropdown-1.0.1.tgz#ee0db5375f8b3bd876f6a842ce4d79497574c3fa"
+  integrity sha512-pfMc7WaVkT8cubnN6GC9bpl8EDHa62Rs1C6ua16epnr0Berq0SbHNa4HCNtqqIGGrAN6rlX3uSkMEwHA+ROCsQ==
+  dependencies:
+    prop-types "^15.7.2"
+    react-native-vector-icons "^7.0.0"
+
+react-native-input-style@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-input-style/-/react-native-input-style-1.0.2.tgz#7d9d7b6bf81130b435895b0ca7cfcd8bc3151548"
+  integrity sha512-guk/xrWMCrgZFTV62SH7CtQo1hC/wlPcMRVH5RaTsT3zh85JJiKIuwzChmKGKIeNoxpxhB9tH9A3ozgWvLW6zQ==
+
 react-native-safe-area-context@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.2.0.tgz#06113c6b208f982d68ab5c3cebd199ca93db6941"
@@ -4794,10 +4812,24 @@ react-native-screens@~3.4.0:
   dependencies:
     warn-once "^0.1.0"
 
-react-native-select-dropdown@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-select-dropdown/-/react-native-select-dropdown-1.1.0.tgz#e640a02738c8569c4a1df57ea5a2f1607982000b"
-  integrity sha512-76XFBc/axByFw8ilgaC6iA4bBYKdxPFZifiQfhrFnwJmwFXE+9XhrlvMMww5seXukrEMOp0JkLasgINSEr6kwQ==
+react-native-table-component@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-table-component/-/react-native-table-component-1.2.1.tgz#5f1e0f159b1dff9df0d5601c4a5ab99d1aa99a25"
+  integrity sha512-sapwO0bONfQtpWg3GVMwP5D3lGEJlxPB3c7fb0soXBynvCa+SBktacVZ9OmYJnIbRJ3uW5pS4tzNc8GmE+UScw==
+
+react-native-vector-icons@^7.0.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-7.1.0.tgz#145487d617b2a81d395d2cf64e6e065fcab3a454"
+  integrity sha512-V2a1zJ4i+kS8O4j183gIwX14St9AxxXabxwYpFBgRhvr2NDXyFcjHDEAgrOYYlt2W57e20aN1tBDU/I+wn9WtQ==
+  dependencies:
+    lodash.frompairs "^4.0.1"
+    lodash.isequal "^4.5.0"
+    lodash.isstring "^4.0.1"
+    lodash.omit "^4.5.0"
+    lodash.pick "^4.4.0"
+    lodash.template "^4.5.0"
+    prop-types "^15.7.2"
+    yargs "^15.0.2"
 
 react-native-web@~0.13.12:
   version "0.13.18"
@@ -5927,7 +5959,7 @@ yargs@^14.2.0:
     y18n "^4.0.0"
     yargs-parser "^15.0.1"
 
-yargs@^15.1.0:
+yargs@^15.0.2, yargs@^15.1.0:
   version "15.4.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.4.1.tgz#0d87a16de01aee9d8bec2bfbf74f67851730f4f8"
   integrity sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==

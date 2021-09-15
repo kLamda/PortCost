@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "A react native mobile application calculating all the port fares.",
+    "githubUrl": "https://github.com/kLamda/PortCost"
   }
 }
