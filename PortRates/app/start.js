@@ -32,7 +32,7 @@ export default function StartPage({navigation}) {
     NunitoSans_800ExtraBold
   });
 
-  const getData = () => {axios.get("http://192.168.43.156:3001/showall").then((response) => {
+  const getData = () => {axios.get("https://portrates.herokuapp.com/showall").then((response) => {
     const data = response.data;
     getList(data);
     setIsLoading(false);
@@ -64,9 +64,7 @@ export default function StartPage({navigation}) {
     
     navigation.navigate('Result', {value: {'addition': sum_, 'subtraction': diff_, 'division': div_, 'multiplication': mul_}});
   };
-  var onChange3 = (value) => {
-    console.log(value);
-  };
+  
   if (isLoading) {
     return (
       <View style={styles.preLoader}>
@@ -124,7 +122,6 @@ export default function StartPage({navigation}) {
           dropDownStyle={{backgroundColor: '#D7E2FE'}}
           onChangeItem={item => {
               let number4 = dataList.find(a => a.label === item.value).number_3;
-              console.log(item.value);
               setNumber4(number4);
             }}/>
 

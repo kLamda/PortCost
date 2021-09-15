@@ -11,7 +11,6 @@ export default function EndPage({route})
    for(let i=0; i<Object.keys(dataObj).length; i++){
       dataTable.push([Object.keys(dataObj)[i], dataObj[Object.keys(dataObj)[i]]]);
    }
-   console.log(dataTable);
 
    var data = {
       HeadTable: ['Attribute', 'value'],
