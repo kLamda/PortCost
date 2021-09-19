@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
-
+import {ForeignParadeep} from "./helper.js";
 
 class Try extends React.Component {
 
@@ -19,6 +19,12 @@ class Try extends React.Component {
           HGRT: 0,
           Hours: 0,
           WaterUSG: 0,
+          waterChargeType : null,
+          shifts: 0,
+          cancellations: 0,
+          Garbage: 0,
+          SGST: 0,
+          CGST: 0
       }
     }
     
@@ -46,6 +52,36 @@ class Try extends React.Component {
     };
 
     render() {
+      let DollarVal = 20;
+      let portType = null;
+      let calcType = null;
+      submit = () => {
+        // let finalResult = ForeignParadeep(
+        //   this.state.HGRT, 
+        //   this.state.shifts, 
+        //   this.state.Hours, 
+        //   this.state.WaterUSG, 
+        //   this.state.waterChargeType, 
+        //   this.state.cancellations, 
+        //   this.state.Garbage, 
+        //   this.state.SGST, 
+        //   this.state.CGST, 
+        //   DollarVal);
+          console.log({
+            HGRT: this.state.HGRT,
+            shifts: this.state.shifts,
+            Hours: this.state.Hours,
+            WaterUSG: this.state.WaterUSG,
+            waterChargeType: this.state.waterChargeType,
+            cancellations: this.state.cancellations,
+            Garbage: this.state.Garbage,
+            SGST: this.state.SGST,
+            CGST: this.state.CGST,
+            DollarVal: DollarVal,
+            portType: portType,
+            calcType: calcType
+          })
+      }
       return (
         <ScrollView style={styles.container}>
           <View style={styles.btnContainer}>
@@ -131,7 +167,7 @@ class Try extends React.Component {
             </View>
           </View> 
           <View style={styles.inputContainer}>
-            <DropDownPicker
+            {/* <DropDownPicker
               items={[{label: "Foreign", value: 0}, {label: "Coastal", value: 1}]}
               containerStyle={{height: 43, width: "90%", marginBottom: 20, zIndex: 10}}
               itemStyle={{
@@ -143,9 +179,10 @@ class Try extends React.Component {
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Calculation Type"
-              />
+              onChangeItem = {item => {calcType = item.value;}}
+            /> */}
             <DropDownPicker
-              items={[{label: "Foreign", value: 0}, {label: "Coastal", value: 1}]}
+              items={[{label: "Paradeep", value: 0}, {label: "Port Blair", value: 1}]}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
               itemStyle={{
                   justifyContent: 'center',
@@ -156,7 +193,8 @@ class Try extends React.Component {
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Calculation Type"
-              />
+              onChangeItem = {item => {portType = item.value;}}
+            />
             <View style={styles.inputText}>
               <TextInput
                 style={styles.input}
@@ -165,25 +203,38 @@ class Try extends React.Component {
                 onChangeText={HGRT => this.setState({HGRT})}
               />
             </View>
-            <View style={[styles.inputText, {display: this.state.checkBtn3 ? 'flex' : 'none'}]}>
+            {this.state.checkBtn2?
+            <View style={styles.inputText}>
+              <TextInput
+                style={styles.input}
+                placeholder="Input Number of Shifting"
+                keyboardType="numeric"
+                onChangeText={shifts => this.setState({shifts})}
+              />
+            </View>
+            :null}
+            {this.state.checkBtn3 ?
+            <View style={styles.inputText}>
               <TextInput
                 style={styles.input}
                 placeholder="Input Hours"
                 keyboardType="numeric"
                 onChangeText={Hours => this.setState({Hours})}
               />
-            </View>
-            <View style={[styles.inputText, {display: this.state.checkBtn4 ? 'flex' : 'none'}]}>
+            </View>:null}
+            {this.state.checkBtn4 ?
+            <View style={styles.inputText}>
               <TextInput
                 style={styles.input}
                 placeholder="Input Water Usage"
                 keyboardType="numeric"
                 onChangeText={Hours => this.setState({Hours})}
               />
-            </View>
+            </View> : null}
             
+            {this.state.checkBtn4 ?
             <DropDownPicker
-              items={[{label: "Foreign", value: 0}, {label: "Coastal", value: 1}]}
+              items={[{label: "Direct Supply at Birth", value: 0}, {label: "Supply by barges at jetty", value: 1}, {label: "Supply by charges at an charge", value: 2}]}
               containerStyle={{height: 43, width: "90%", marginBottom: 20, zIndex: 10}}
               itemStyle={{
                   justifyContent: 'center',
@@ -193,9 +244,10 @@ class Try extends React.Component {
                   color: '#000'
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
-              placeholder= "Select Calculation Type"
-              />
-            <TouchableOpacity style={styles.proceedBtn}>
+              placeholder= "Select Water Charge Type"
+              onChangeItem = {item => this.setState({waterChargeType: item.value})}
+              /> : null}
+            <TouchableOpacity style={styles.proceedBtn} onPress={submit}>
               <Text style={styles.btnText}>Proceed</Text>
             </TouchableOpacity>
           </View>
@@ -233,6 +285,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 10,
   },
   container: {
     flexDirection: 'column',
