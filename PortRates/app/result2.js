@@ -98,7 +98,7 @@ class Try extends React.Component {
           <View style={styles.btnContainer}>
             <View style={styles.btnRow}>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn1 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn1 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn1: !prevState.checkBtn1
                     }));
@@ -107,7 +107,7 @@ class Try extends React.Component {
                 </Pressable>
               </View>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn2 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn2 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn2: !prevState.checkBtn2
                     }));
@@ -118,7 +118,7 @@ class Try extends React.Component {
             </View>
             <View style={styles.btnRow}>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn3 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn3 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn3: !prevState.checkBtn3
                     }));
@@ -127,7 +127,7 @@ class Try extends React.Component {
                 </Pressable>
               </View>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn4 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn4 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn4: !prevState.checkBtn4
                     }));
@@ -138,7 +138,7 @@ class Try extends React.Component {
             </View>
             <View style={styles.btnRow}>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn5 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn5 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn5: !prevState.checkBtn5
                     }));
@@ -147,7 +147,7 @@ class Try extends React.Component {
                 </Pressable>
               </View>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn6 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn6 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn6: !prevState.checkBtn6
                     }));
@@ -158,7 +158,7 @@ class Try extends React.Component {
             </View>
             <View style={styles.btnRow}>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn7 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn7 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn7: !prevState.checkBtn7
                     }));
@@ -167,7 +167,7 @@ class Try extends React.Component {
                 </Pressable>
               </View>
               <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn8 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+                <Pressable style={[styles.btn, {backgroundColor: this.state.checkBtn8 ? '#7EA1FB' :'#D7E2FE'}]} onPress={() => {
                   this.setState(prevState => ({
                     checkBtn8: !prevState.checkBtn8
                     }));
@@ -298,9 +298,6 @@ const styles = StyleSheet.create({
     marginTop: 60,
     backgroundColor: "#D7E2FE",
   },
-  btnText: {
-    fontSize: 16
-  },
   btnContainer: {
     marginBottom: 10,
   },
@@ -329,7 +326,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: 'bold',
     letterSpacing: 0.25,
-    color: 'white',
+    color: '#333',
   },
   btnRow: {
     flexDirection: 'row',
