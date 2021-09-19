@@ -77,6 +77,7 @@ class Try extends React.Component {
           CGST, 
           DollarVal);
           console.log(finalResult);
+          this.props.navigation.navigate('Result', {value: finalResult});
           // console.log({
           //   HGRT: this.state.HGRT,
           //   shifts: this.state.shifts,
@@ -239,7 +240,7 @@ class Try extends React.Component {
                 style={styles.input}
                 placeholder="Input Water Usage"
                 keyboardType="numeric"
-                onChangeText={Hours => this.setState({Hours})}
+                onChangeText={WaterUSG => this.setState({WaterUSG})}
               />
             </View> : null}
             
@@ -258,6 +259,15 @@ class Try extends React.Component {
               placeholder= "Select Water Charge Type      "
               onChangeItem = {item => this.setState({waterChargeType: item.value})}
             />: null}
+            {this.state.checkBtn5 ?
+            <View style={styles.inputText}>
+              <TextInput
+                style={styles.input}
+                placeholder="Input Cancellation amount"
+                keyboardType="numeric"
+                onChangeText={cancellations => this.setState({cancellations})}
+              />
+            </View>:null}
             <TouchableOpacity style={styles.proceedBtn} onPress={submit}>
               <Text style={styles.btnText}>Proceed</Text>
             </TouchableOpacity>
