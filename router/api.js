@@ -38,18 +38,18 @@ router.get('/showall', (req, res) => {
 })
 
 router.post('/getTime', (req, res) =>{
-    User.find({"_id": req.body.user_id}).then(
+    User.findOne({"_id": req.body.user_id}).then(
         result => {
-            if (result.length!==0){
-                let days = calcTime(new Date().getTime(), result[0].createdAt.getTime())
-                if(days<=result[0].daysAllowed){
+            if (result!== null){
+                let days = calcTime(new Date().getTime(), result.createdAt.getTime())
+                if(days<=result.daysAllowed){
                     res.json({
-                        user_id: result[0]._id,
-                        userName: result[0].userName,
-                        userEmail: result[0].email,
+                        user_id: result._id,
+                        userName: result.userName,
+                        userEmail: result.email,
                         message: 'User login success',
                         status: true,
-                        daysLeft: result[0].daysAllowed - days
+                        daysLeft: result.daysAllowed - days
                     })
                 }
             } else {
@@ -74,19 +74,22 @@ router.post('/register', (req, res) => {
                         status: false
                     })
                 } else {
-                    let userData = req.body
-                    let user = new User(userData)
+                    let user = new User()
+                    user.userName = req.body.userName;
+                    user.email = req.body.email;
+                    user.setPassword(req.body.password);
                     user._id = new mongoose.Types.ObjectId()
                     user.save()
                         .then(
                             result => {
+                                console.log(result);
                                 res.json({
-                                   user_id: result[0]._id,
-                                    userName: result[0].userName,
-                                    userEmail: result[0].email,
+                                    user_id: result._id,
+                                    userName: result.userName,
+                                    userEmail: result.email,
                                     message: 'User register success',
                                     status: true,
-                                    daysLeft: result[0].daysAllowed - days
+                                    daysLeft: result.daysAllowed - calcTime(new Date().getTime(), result.createdAt.getTime())
                                 })
                             }
                         )
@@ -114,19 +117,19 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    User.find({"email": req.body.email})
+    User.findOne({"email": req.body.email})
         .then(
             result => {
-                if (result.length !== 0) {
-                    let days = calcTime(new Date().getTime(), result[0].createdAt.getTime())
-                    if(req.body.password === result[0].password && days <= result[0].daysAllowed) {
+                if (result !== null) {
+                    let days = calcTime(new Date().getTime(), result.createdAt.getTime())
+                    if(result.validPassword(req.body.password) && days <= result.daysAllowed) {
                         res.json({
-                            user_id: result[0]._id,
-                            userName: result[0].userName,
-                            userEmail: result[0].email,
+                            user_id: result._id,
+                            userName: result.userName,
+                            userEmail: result.email,
                             message: 'User login success',
                             status: true,
-                            daysLeft: result[0].daysAllowed - days
+                            daysLeft: result.daysAllowed - days
                         })
                     } else {
                         res.json({
@@ -144,6 +147,7 @@ router.post('/login', (req, res) => {
         )
         .catch(
             error => {
+                console.log(error);
                 res.json({
                     message: ' User login fail',
                     status: false,
