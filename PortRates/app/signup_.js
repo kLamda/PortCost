@@ -1,9 +1,9 @@
-// components/signup.js
+//signup.js
 
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
-// import firebase from '../database/firebase';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loader from './loader';
 
 export default class Signup extends Component {
   
@@ -31,7 +31,7 @@ export default class Signup extends Component {
         isLoading: true,
       })
     let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password};
-    fetch("https://portrates.herokuapp.com/api/register", {
+    fetch("http://192.168.43.156:3000/api/register", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
@@ -45,7 +45,12 @@ export default class Signup extends Component {
           password: ''
         })
         if(responseJSON.status === true) {
-          this.props.navigation.navigate('try')
+          AsyncStorage.setItem('user_id', responseJSON.user_id);
+          this.props.navigation.navigate('SignedIn', {
+            "user_id": responseJSON.user_id,
+            "userName": responseJSON.userName,
+            "daysLeft" : responseJSON.daysLeft
+          })
         } else {
           this.props.navigation.navigate('Signup')
           Alert.alert(responseJSON.message)
@@ -55,16 +60,10 @@ export default class Signup extends Component {
     }
   }
 
-  render() {
-    if(this.state.isLoading){
-      return(
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E"/>
-        </View>
-      )
-    }    
+  render() {  
     return (
       <View style={styles.container}>  
+        <Loader loading={this.state.isLoading} /> 
         <TextInput
           style={styles.inputStyle}
           placeholder="Name"

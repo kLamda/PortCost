@@ -2,9 +2,8 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
-import { onSignIn } from './auth';
-// import firebase from '../database/firebase';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loader from './loader'
 
 export default class Login extends Component {
   
@@ -31,7 +30,7 @@ export default class Login extends Component {
         isLoading: true,
       })
     let dataToSend = {email: this.state.email, password: this.state.password};
-    fetch("https://portrates.herokuapp.com/api/login", {
+    fetch("http://192.168.43.156:3000/api/login", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
@@ -45,7 +44,12 @@ export default class Login extends Component {
           password: ''
         })
         if(responseJSON.status === true) {
-          this.props.navigation.navigate('try')
+          AsyncStorage.setItem('user_id', responseJSON.user_id);
+          this.props.navigation.navigate('SignedIn', {
+            "user_id": responseJSON.user_id,
+            "userName": responseJSON.userName,
+            "daysLeft" : responseJSON.daysLeft
+          })
         } else {
           Alert.alert('Invalid email or password!')
           this.props.navigation.navigate('Login')
@@ -56,16 +60,10 @@ export default class Login extends Component {
     }
   }
 
-  render() {
-    if(this.state.isLoading){
-      return(
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E"/>
-        </View>
-      )
-    }    
+  render() { 
     return (
-      <View style={styles.container}>  
+      <View style={styles.container}> 
+        <Loader loading={this.state.isLoading} /> 
         <TextInput
           style={styles.inputStyle}
           placeholder="Email"

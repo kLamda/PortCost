@@ -6,9 +6,11 @@ const userSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     userName: {type: String, required: true},
     email: {type: String, required: true},
-    // phone: {type: Number, required: true},
     password: {type: String, required: true},
-    daysLeft: {type: Number, default: 3}, 
+    daysAllowed: {type: Number, default: 3}
+},
+{
+    timestamps: true
 });
 
 module.exports = mongoose.model('user', userSchema, 'user');

@@ -12,6 +12,13 @@ mongoose.connect(db, err => {
     }
 });
 
+function calcTime(timestamp1, timestamp2) {
+    var difference = timestamp1 - timestamp2;
+    var daysDifference = Math.floor(difference/1000/60/60/24);
+
+    return daysDifference;
+}
+
 router.get('/', (req, res) => {
     res.send("From API router")
 });
@@ -30,6 +37,32 @@ router.get('/showall', (req, res) => {
     });
 })
 
+router.post('/getTime', (req, res) =>{
+    User.find({"_id": req.body.user_id}).then(
+        result => {
+            if (result.length!==0){
+                let days = calcTime(new Date().getTime(), result[0].createdAt.getTime())
+                if(days<=result[0].daysAllowed){
+                    res.json({
+                        user_id: result[0]._id,
+                        userName: result[0].userName,
+                        userEmail: result[0].email,
+                        message: 'User login success',
+                        status: true,
+                        daysLeft: result[0].daysAllowed - days
+                    })
+                }
+            } else {
+                res.json({status: false, message: "ID not found"})
+            }
+        }
+    ). catch(
+        error => {
+            res.send("Couldn't connect");
+            console.log(error);
+        }
+    )
+})
 
 router.post('/register', (req, res) => {
     User.find({"email": req.body.email})
@@ -48,8 +81,12 @@ router.post('/register', (req, res) => {
                         .then(
                             result => {
                                 res.json({
-                                   message: 'User register success',
-                                   status: true
+                                   user_id: result[0]._id,
+                                    userName: result[0].userName,
+                                    userEmail: result[0].email,
+                                    message: 'User register success',
+                                    status: true,
+                                    daysLeft: result[0].daysAllowed - days
                                 })
                             }
                         )
@@ -77,17 +114,19 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    console.log(req.body)
     User.find({"email": req.body.email})
         .then(
             result => {
                 if (result.length !== 0) {
-                    console.log(result[0].password)
-                    console.log(req.body.password)
-                    if(req.body.password === result[0].password) {
+                    let days = calcTime(new Date().getTime(), result[0].createdAt.getTime())
+                    if(req.body.password === result[0].password && days <= result[0].daysAllowed) {
                         res.json({
+                            user_id: result[0]._id,
+                            userName: result[0].userName,
+                            userEmail: result[0].email,
                             message: 'User login success',
                             status: true,
+                            daysLeft: result[0].daysAllowed - days
                         })
                     } else {
                         res.json({
