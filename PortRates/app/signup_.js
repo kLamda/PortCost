@@ -31,7 +31,7 @@ export default class Signup extends Component {
         isLoading: true,
       })
     let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password};
-    fetch("http://192.168.43.156:3000/api/register", {
+    fetch("https://portrates.herokuapp.com/api/register", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
@@ -48,7 +48,7 @@ export default class Signup extends Component {
           this.props.navigation.navigate('try')
         } else {
           this.props.navigation.navigate('Signup')
-          console.log(responseJSON.message)
+          Alert.alert(responseJSON.message)
         }
       })
       .catch(error => console.log(error)) 

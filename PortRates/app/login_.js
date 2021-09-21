@@ -31,7 +31,7 @@ export default class Login extends Component {
         isLoading: true,
       })
     let dataToSend = {email: this.state.email, password: this.state.password};
-    fetch("http://192.168.43.156:3000/api/login", {
+    fetch("https://portrates.herokuapp.com/api/login", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
@@ -39,7 +39,6 @@ export default class Login extends Component {
       },
     }).then((response) => response.json())
     .then((responseJSON) => {
-        console.log(responseJSON)
         this.setState({
           isLoading: false,
           email: '', 
@@ -48,8 +47,8 @@ export default class Login extends Component {
         if(responseJSON.status === true) {
           this.props.navigation.navigate('try')
         } else {
+          Alert.alert('Invalid email or password!')
           this.props.navigation.navigate('Login')
-          console.log(responseJSON.message)
         }
       })
       .catch(error => console.log(error))
