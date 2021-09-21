@@ -1,16 +1,16 @@
-// components/signup.js
+// components/login.js
 
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { onSignIn } from './auth';
 // import firebase from '../database/firebase';
 
 
-export default class Signup extends Component {
+export default class Login extends Component {
   
   constructor() {
     super();
     this.state = { 
-      displayName: '',
       email: '', 
       password: '',
       isLoading: false
@@ -23,30 +23,37 @@ export default class Signup extends Component {
     this.setState(state);
   }
 
-  registerUser = () => {
+  userLogin = () => {
     if(this.state.email === '' && this.state.password === '') {
-      Alert.alert('Enter details to signup!')
+      Alert.alert('Enter details to signin!')
     } else {
       this.setState({
         isLoading: true,
       })
-    //   firebase
-    //   .auth()
-    //   .createUserWithEmailAndPassword(this.state.email, this.state.password)
-    //   .then((res) => {
-    //     res.user.updateProfile({
-    //       displayName: this.state.displayName
-    //     })
-    //     console.log('User registered successfully!')
-    //     this.setState({
-    //       isLoading: false,
-    //       displayName: '',
-    //       email: '', 
-    //       password: ''
-    //     })
-    //     this.props.navigation.navigate('Login')
-    //   })
-    //   .catch(error => this.setState({ errorMessage: error.message }))      
+    let dataToSend = {email: this.state.email, password: this.state.password};
+    fetch("http://192.168.43.156:3000/api/login", {
+      method: "POST",
+      body: JSON.stringify(dataToSend),
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+      },
+    }).then((response) => response.json())
+    .then((responseJSON) => {
+        console.log(responseJSON)
+        this.setState({
+          isLoading: false,
+          email: '', 
+          password: ''
+        })
+        if(responseJSON.status === true) {
+          this.props.navigation.navigate('try')
+        } else {
+          this.props.navigation.navigate('Login')
+          console.log(responseJSON.message)
+        }
+      })
+      .catch(error => console.log(error))
+        // this.setState({ errorMessage: error.message })
     }
   }
 
@@ -60,12 +67,6 @@ export default class Signup extends Component {
     }    
     return (
       <View style={styles.container}>  
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Name"
-          value={this.state.displayName}
-          onChangeText={(val) => this.updateInputVal(val, 'displayName')}
-        />      
         <TextInput
           style={styles.inputStyle}
           placeholder="Email"
@@ -82,14 +83,14 @@ export default class Signup extends Component {
         />   
         <Button
           color="#3740FE"
-          title="Signup"
-          onPress={() => this.registerUser()}
-        />
+          title="Signin"
+          onPress={() => this.userLogin()}
+        />   
 
         <Text 
           style={styles.loginText}
-          onPress={() => this.props.navigation.navigate('Login')}>
-          Already Registered? Click here to login
+          onPress={() => this.props.navigation.navigate('Signup')}>
+          Don't have account? Click here to signup
         </Text>                          
       </View>
     );

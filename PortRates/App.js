@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 import StartPage from './app/start';
-import Signup from './app/signup';
+import Signup from './app/signup_';
 import EndPage from './app/results';
 import Try from './app/result2';
-import Login from './app/login';
+import Login from './app/login_';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 
