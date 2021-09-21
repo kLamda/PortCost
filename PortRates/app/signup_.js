@@ -31,7 +31,7 @@ export default class Signup extends Component {
         isLoading: true,
       })
     let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password};
-    fetch("https://portrates.herokuapp.com/api/register", {
+    fetch("http://portrates.herokuapp.com/api/register", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
@@ -64,6 +64,7 @@ export default class Signup extends Component {
     return (
       <View style={styles.container}>  
         <Loader loading={this.state.isLoading} /> 
+        
         <TextInput
           style={styles.inputStyle}
           placeholder="Name"

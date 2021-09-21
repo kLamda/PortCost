@@ -30,7 +30,7 @@ export default class Login extends Component {
         isLoading: true,
       })
     let dataToSend = {email: this.state.email, password: this.state.password};
-    fetch("https://portrates.herokuapp.com/api/login", {
+    fetch("http://portrates.herokuapp.com/api/login", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
