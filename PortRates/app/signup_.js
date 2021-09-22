@@ -40,7 +40,7 @@ export default class Signup extends Component {
       (responseJson) => {
         if(responseJson.quality_score>0.5){
           let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password, phone: this.state.phone};
-          fetch("http://192.168.43.156:3000/api/register", {
+          fetch("http://portrates.herokuapp.com/api/register", {
             method: "POST",
             body: JSON.stringify(dataToSend),
             headers: {
@@ -49,7 +49,7 @@ export default class Signup extends Component {
           }).then((responseO) => responseO.json())
           .then((responseOJSON) => {
               if(responseOJSON.status === true) {
-                fetch("http://192.168.43.156:3000/api/getCol").then(
+                fetch("http://portrates.herokuapp.com/api/getCol").then(
                   (responseI) => responseI.json()).then(
                     (responseIJSON) => {
                       if(responseIJSON.status === true) {
