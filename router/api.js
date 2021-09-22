@@ -60,7 +60,8 @@ router.post('/getTime', (req, res) =>{
                         userEmail: result.email,
                         message: 'User login success',
                         status: true,
-                        daysLeft: result.daysAllowed - days
+                        daysLeft: result.daysAllowed - days,
+                        phone: result.phone
                     })
                 }
             } else {
@@ -76,6 +77,18 @@ router.post('/getTime', (req, res) =>{
 })
 
 router.post('/register', (req, res) => {
+    if(`${req.body.phone}`.length < 10){
+        res.json({
+            status: false,
+            message: 'Enter Valid Phone Number'
+        })
+    } else if(`${req.body.password}`.length < 6){
+        res.json({
+            status: false,
+            message: 'Password must be at least 6 digits'
+        })
+    }
+    else {
     User.find({"email": req.body.email})
         .then(
             result => {
@@ -100,7 +113,8 @@ router.post('/register', (req, res) => {
                                     userEmail: result.email,
                                     message: 'User register success',
                                     status: true,
-                                    daysLeft: result.daysAllowed - calcTime(new Date().getTime(), result.createdAt.getTime())
+                                    daysLeft: result.daysAllowed - calcTime(new Date().getTime(), result.createdAt.getTime()),
+                                    phone: result.phone
                                 })
                             }
                         )
@@ -125,6 +139,7 @@ router.post('/register', (req, res) => {
                 })
             }
         )
+    }
 });
 
 router.post('/login', (req, res) => {
@@ -140,7 +155,8 @@ router.post('/login', (req, res) => {
                             userEmail: result.email,
                             message: 'User login success',
                             status: true,
-                            daysLeft: result.daysAllowed - days
+                            daysLeft: result.daysAllowed - days,
+                            phone: result.phone
                         })
                     } else {
                         res.json({
