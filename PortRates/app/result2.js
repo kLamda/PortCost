@@ -10,7 +10,7 @@ class Try extends React.Component {
       super(props);
       this.state = {
           collections: this.props.route.params.collection.map(item => {return {label: item, value: item}}),
-          portCollection: null,
+          calcCollection: null,
           checkBtn1: false,
           checkBtn2: false,
           checkBtn3: false,
@@ -20,6 +20,7 @@ class Try extends React.Component {
           checkBtn7: false,
           checkBtn8: false,
           HGRT: 0,
+          LGRT: 0,
           Hours: 0,
           WaterUSG: 0,
           waterChargeType : null,
@@ -30,12 +31,13 @@ class Try extends React.Component {
           CGST: 0,
           isLoading: false,
           portType: null,
-          calcType: null
+          calcType: null,
+          btnOptions: [{title: "CheckBtn1", val: false}, {title: "CheckBtn2", val: false}, {title: "CheckBtn3", val: false}, {title: "CheckBtn4", val: false}, {title: "CheckBtn5", val: false}, {title: "CheckBtn6", val: false}, {title: "CheckBtn7", val: false}, {title: "CheckBtn8", val: false}],
       }
     }
 
     render() {
-      let DollarVal = 20;
+      let DollarVal = 74.43;
       let CGST = this.state.checkBtn8 ? 0.09 : 0;
       let SGST = this.state.checkBtn7 ? 0.09 : 0;
       
@@ -53,13 +55,15 @@ class Try extends React.Component {
         } else{
         if(this.state.portType=="Paradeep" && this.state.calcType=="Foreign") {
           let finalResult = ForeignParadeep(
+            this.state.checkBtn1,
+            this.state.LGRT,
             this.state.HGRT, 
             this.state.checkBtn2,
-            this.state.shifts, 
-            this.state.Hours, 
-            this.state.WaterUSG, 
-            this.state.waterChargeType, 
-            this.state.cancellations, 
+            this.state.checkBtn2 ? this.state.shifts : 0, 
+            this.state.checkBtn3 ? this.state.Hours : 0, 
+            this.state.checkBtn4 ? this.state.WaterUSG : 0, 
+            this.state.checkBtn4 ? this.state.waterChargeType : 0, 
+            this.state.checkBtn5 ? this.state.cancellations : 0,
             this.state.checkBtn6 ? 1000 : 0, 
             SGST, 
             CGST, 
@@ -67,21 +71,24 @@ class Try extends React.Component {
             this.props.navigation.navigate('Result', {value: finalResult});
           } else if (this.state.portType=="Paradeep" && this.state.calcType == "Coastal"){
             let finalResult = CoastalParadeep(
+            this.state.checkBtn1,
+            this.state.LGRT,
             this.state.HGRT, 
             this.state.checkBtn2,
-            this.state.shifts, 
-            this.state.Hours, 
-            this.state.WaterUSG, 
-            this.state.waterChargeType, 
-            this.state.cancellations, 
+            this.state.checkBtn2 ? this.state.shifts : 0, 
+            this.state.checkBtn3 ? this.state.Hours : 0, 
+            this.state.checkBtn4 ? this.state.WaterUSG : 0, 
+            this.state.checkBtn4 ? this.state.waterChargeType : 0, 
+            this.state.checkBtn5 ? this.state.cancellations : 0, 
             this.state.checkBtn6 ? 500 : 0, 
-            SGST, 
+            SGST,
             CGST, 
             DollarVal);
             this.props.navigation.navigate('Result', {value: finalResult});
           }
         } 
       }
+      
       return (
         <ScrollView style={styles.container}>
           <Loader loading={this.state.isLoading} />
@@ -168,7 +175,16 @@ class Try extends React.Component {
             </View>
           </View> 
           <View style={styles.inputContainer}>
-            
+            {this.state.checkBtn1 ?
+            this.state.btnOptions.map((item, index) => {
+              return (
+                <View key={index}>
+                  <Text>
+                  {item.title}
+                  </Text>
+                </View>
+
+              )}):null}
             <DropDownPicker
               items={this.state.collections}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
@@ -180,23 +196,23 @@ class Try extends React.Component {
                   color: '#000'
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
-              placeholder= "Select Calculation Type"
+              placeholder= "Select Port Type"
               onChangeItem = {item => {
-                this.setState({isLoading: true, calcType : item.value});
+                this.setState({isLoading: true, portType : item.value});
                 fetch(`http://portrates.herokuapp.com/api/getDoc/${item.value}`).then(
                   response => response.json()).then(responseJson => {
                     this.setState({
                       isLoading: false,
-                      portCollection: responseJson.map(item => {return {label: item.portName, value: item.portName}}),
+                      calcCollection: responseJson.map(item => {return {label: item.title, value: item.title}}),
                     });
                   }).catch(error => {
                     console.log(error);
                   });
               }}
             />
-            {this.state.portCollection!==null ?
+            {this.state.calcCollection!==null ?
             <DropDownPicker
-              items={this.state.portCollection}
+              items={this.state.calcCollection}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
               itemStyle={{
                   justifyContent: 'center',
@@ -206,8 +222,8 @@ class Try extends React.Component {
                   color: '#000'
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
-              placeholder= "Select Port"
-              onChangeItem = {item => {this.setState({portType :item.value});}}
+              placeholder= "Select Calculation Type"
+              onChangeItem = {item => {this.setState({calcType :item.value});}}
             /> : null }
             <View style={styles.inputText}>
               <TextInput
@@ -215,6 +231,14 @@ class Try extends React.Component {
                 placeholder="Input HGRT value"
                 keyboardType="numeric"
                 onChangeText={HGRT => this.setState({HGRT})}
+              />
+            </View>
+            <View style={styles.inputText}>
+              <TextInput
+                style={styles.input}
+                placeholder="Input LGRT value"
+                keyboardType="numeric"
+                onChangeText={LGRT => this.setState({LGRT})}
               />
             </View>
             {this.state.checkBtn2?

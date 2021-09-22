@@ -1,5 +1,5 @@
-export function ForeignParadeep(HGRT, pilotageChoose, Shifting, Hours, WaterUsage, WaterType, Cancellation, Garbage, SGST, CGST, DollarVal){
-    let PortDues = 0.267 * HGRT * DollarVal;
+export function ForeignParadeep(portDueChoose, LGRT, HGRT, pilotageChoose, Shifting, Hours, WaterUsage, WaterType, Cancellation, Garbage, SGST, CGST, DollarVal){
+    let PortDues = portDueChoose ? 0.267 * (LGRT == 0 ? HGRT : LGRT) * DollarVal : 0;
     let BerthHire = 0.002624 * HGRT * DollarVal * Hours ;
     let WaterCharge = 0;
     if(WaterType == 0){WaterCharge = 4.41 * DollarVal * WaterUsage;}
@@ -8,7 +8,7 @@ export function ForeignParadeep(HGRT, pilotageChoose, Shifting, Hours, WaterUsag
     let Pilotage = 0;
     if (pilotageChoose){
         if(HGRT <= 30000){Pilotage += (0.56207 * DollarVal * HGRT)}
-        if(HGRT>30000 && HGRT<=6000){Pilotage += ((0.44945 * DollarVal * (HGRT - 30000)) + (16862 * DollarVal))}
+        if(HGRT>30000 && HGRT<=60000){Pilotage += ((0.44945 * DollarVal * (HGRT - 30000)) + (16862 * DollarVal))}
         if(HGRT>60000){Pilotage += ((0.393 * DollarVal * (HGRT - 60000)) + (30345.5 * DollarVal))}
     }
     let ShiftingCost = Shifting * (Pilotage/2);
@@ -31,13 +31,13 @@ export function ForeignParadeep(HGRT, pilotageChoose, Shifting, Hours, WaterUsag
     }
 }
 
-export function CoastalParadeep(HGRT, pilotageChoose, Shifting, Hours, WaterUsage, WaterType, Cancellation, Garbage, SGST, CGST){
-    let PortDues = 6.574 * HGRT;
+export function CoastalParadeep(portDueChoose,LGRT, HGRT, pilotageChoose, Shifting, Hours, WaterUsage, WaterType, Cancellation, Garbage, SGST, CGST){
+    let PortDues = portDueChoose ? 6.574 * (LGRT == 0 ? HGRT : LGRT) : 0;
     let BerthHire = 0.064 * HGRT * Hours ;
     let Pilotage = 0;
     if (pilotageChoose){
         if(HGRT <= 30000){Pilotage += (13.83 * HGRT)}
-        if(HGRT>30000 && HGRT<=6000){Pilotage += ((11.06 * (HGRT - 30000)) + 414900)}
+        if(HGRT>30000 && HGRT<=60000){Pilotage += ((11.06 * (HGRT - 30000)) + 414900)}
         if(HGRT>60000){Pilotage += ((9.68 * (HGRT - 60000)) + 746700)}
     }
     let WaterCharge = 0;
