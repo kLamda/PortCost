@@ -35,29 +35,39 @@ export default class Signup extends Component {
         isLoading: true,
       })
     let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password, phone: this.state.phone};
-    fetch("http://portrates.herokuapp.com/api/register", {
+    fetch("http://192.168.43.156:3000/api/register", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
       },
-    }).then((response) => response.json())
-    .then((responseJSON) => {
-        this.setState({
-          isLoading: false,
-          email: '', 
-          password: ''
-        })
-        if(responseJSON.status === true) {
-          AsyncStorage.setItem('user_id', responseJSON.user_id);
-          this.props.navigation.navigate('SignedIn', {
-            "user_id": responseJSON.user_id,
-            "userName": responseJSON.userName,
-            "daysLeft" : responseJSON.daysLeft
-          })
+    }).then((responseO) => responseO.json())
+    .then((responseOJSON) => {
+        if(responseOJSON.status === true) {
+          fetch("http://192.168.43.156:3000/api/getCol").then(
+            (responseI) => responseI.json()).then(
+              (responseIJSON) => {
+                if(responseIJSON.status === true) {
+                  this.setState({
+                    isLoading: false,
+                    email: '', 
+                    password: ''
+                  });
+                  AsyncStorage.setItem('user_id', responseOJSON.user_id);
+                  this.props.navigation.navigate('SignedIn', {
+                    "user_id": responseOJSON.user_id,
+                    "userName": responseOJSON.userName,
+                    "daysLeft" : responseOJSON.daysLeft
+                  })
+                }else{
+                navigation.replace('Signup')
+                console.log("Inner fetch compromised");
+              }
+            }
+          )
         } else {
           this.props.navigation.navigate('Signup')
-          Alert.alert(responseJSON.message)
+          Alert.alert(responseOJSON.message)
         }
       })
       .catch(error => console.log(error)) 

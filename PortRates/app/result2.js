@@ -2,12 +2,15 @@ import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
 import {ForeignParadeep} from "./helper.js";
+import Loader from "./loader.js";
 
 class Try extends React.Component {
 
     constructor(props) {
       super(props);
       this.state = {
+          collections: this.props.route.params.collection.map(item => {return {label: item, value: item}}),
+          portCollection: null,
           checkBtn1: false,
           checkBtn2: false,
           checkBtn3: false,
@@ -24,32 +27,34 @@ class Try extends React.Component {
           cancellations: 0,
           Garbage: 0,
           SGST: 0,
-          CGST: 0
+          CGST: 0,
+          isLoading: false,
       }
     }
     
-    list = () => {
-      return this.state.btnDetails.map((element, key) => {
-        return (
-          <View key={key} style={styles.btnRow}>
-              <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor: element.checkBtnLeft ? '#ff0000' : '#00ff00'}]} onPress={element.leftBtnOnPress}>
-                  <Text style={styles.btnText}>{element.leftBtnTitle}</Text>
-                </Pressable>
-              </View>
-              <View style={styles.btnColumn}>
-                <Pressable style={[styles.btn, {backgroundColor:this.state.checkBtn2 ? '#ff0000' : '#00ff00'}]} onPress={() => {
-                  this.setState(prevState => ({
-                    checkBtn2: !prevState.checkBtn2
-                    }));
-                  }} >
-                  <Text style={styles.btnText}>{element.rightBtnTitle}</Text>
-                </Pressable>
-              </View>
-            </View>
-        );
-      });
-    };
+    
+    // list = () => {
+    //   return this.state.btnDetails.map((element, key) => {
+    //     return (
+    //       <View key={key} style={styles.btnRow}>
+    //           <View style={styles.btnColumn}>
+    //             <Pressable style={[styles.btn, {backgroundColor: element.checkBtnLeft ? '#ff0000' : '#00ff00'}]} onPress={element.leftBtnOnPress}>
+    //               <Text style={styles.btnText}>{element.leftBtnTitle}</Text>
+    //             </Pressable>
+    //           </View>
+    //           <View style={styles.btnColumn}>
+    //             <Pressable style={[styles.btn, {backgroundColor:this.state.checkBtn2 ? '#ff0000' : '#00ff00'}]} onPress={() => {
+    //               this.setState(prevState => ({
+    //                 checkBtn2: !prevState.checkBtn2
+    //                 }));
+    //               }} >
+    //               <Text style={styles.btnText}>{element.rightBtnTitle}</Text>
+    //             </Pressable>
+    //           </View>
+    //         </View>
+    //     );
+    //   });
+    // };
 
     render() {
       let DollarVal = 20;
@@ -95,6 +100,7 @@ class Try extends React.Component {
       }
       return (
         <ScrollView style={styles.container}>
+          <Loader loading={this.state.isLoading} />
           <View style={styles.btnContainer}>
             <View style={styles.btnRow}>
               <View style={styles.btnColumn}>
@@ -180,7 +186,7 @@ class Try extends React.Component {
           <View style={styles.inputContainer}>
             
             <DropDownPicker
-              items={[{label: "Foreign", value: 0}, {label: "Coastal", value: 1}]}
+              items={this.state.collections}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
               itemStyle={{
                   justifyContent: 'center',
@@ -191,10 +197,23 @@ class Try extends React.Component {
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Calculation Type"
-              onChangeItem = {item => {calcType = item.value;}}
+              onChangeItem = {item => {
+                calcType = item.value;
+                this.setState({isLoading: true});
+                fetch(`http://192.168.43.156:3000/api/getDoc/${item.value}`).then(
+                  response => response.json()).then(responseJson => {
+                    this.setState({
+                      isLoading: false,
+                      portCollection: responseJson.map(item => {return {label: item.portName, value: item.portName}}),
+                    });
+                  }).catch(error => {
+                    console.log(error);
+                  });
+              }}
             />
+            {this.state.portCollection!==null ?
             <DropDownPicker
-              items={[{label: "Paradeep", value: 0}, {label: "Port Blair", value: 1}]}
+              items={this.state.portCollection}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
               itemStyle={{
                   justifyContent: 'center',
@@ -206,7 +225,7 @@ class Try extends React.Component {
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Port"
               onChangeItem = {item => {portType = item.value;}}
-            />
+            /> : null }
             <View style={styles.inputText}>
               <TextInput
                 style={styles.input}

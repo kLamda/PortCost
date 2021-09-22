@@ -15,7 +15,6 @@ mongoose.connect(db, err => {
 function calcTime(timestamp1, timestamp2) {
     var difference = timestamp1 - timestamp2;
     var daysDifference = Math.floor(difference/1000/60/60/24);
-
     return daysDifference;
 }
 
@@ -23,17 +22,29 @@ router.get('/', (req, res) => {
     res.send("From API router")
 });
 
-router.get('/showall', (req, res) => {
-    MongoClient.connect(db, function(err, db) {
-        useNewUrlParser: true
+router.get('/getCol', (req, res) => {
+    MongoClient.connect(db, {useNewUrlParser: true}, function(err, db) { 
         if (err) throw err;
-        console.log("Database connected!");
         var dbo = db.db("PortData");
-        dbo.collection("Foreign").find({}).toArray(function(err, result) {
+        dbo.listCollections().toArray(function(err, collInfos) {
+            if (err) throw err;
+            let collections = collInfos.map((value) => value.name).filter((value)=>value!='user');
+            res.json({collection: collections, status: true});
+            db.close(); 
+        });        
+    });
+})
+
+router.get('/getDoc/:id', (req, res) => {
+    var collection = req.params.id;
+    MongoClient.connect(db, {useNewUrlParser: true}, function(err, db) { 
         if (err) throw err;
-        res.send(result);
-        db.close();
-        });
+        var dbo = db.db("PortData");
+        dbo.collection(collection).find({}).toArray(function(err, result) {
+            if (err) throw err;
+            res.send(result);
+            db.close(); 
+        });        
     });
 })
 
@@ -83,7 +94,6 @@ router.post('/register', (req, res) => {
                     user.save()
                         .then(
                             result => {
-                                console.log(result);
                                 res.json({
                                     user_id: result._id,
                                     userName: result.userName,

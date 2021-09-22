@@ -10,7 +10,7 @@ export function SignedIn({route}){
   // console.log(route.params)
   return (
     <Tab.Navigator initialRouteName="Home" >
-      <Tab.Screen name="Home" component={Try} options={{
+      <Tab.Screen name="Home" initialParams={route.params} component={Try} options={{
       tabBarLabel: 'Home',
       tabBarIcon: ({ color, size }) => (
           <Ionicons name="home" color={color} size={size} />
