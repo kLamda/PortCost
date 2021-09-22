@@ -183,7 +183,7 @@ class Try extends React.Component {
               placeholder= "Select Calculation Type"
               onChangeItem = {item => {
                 this.setState({isLoading: true, calcType : item.value});
-                fetch(`http://192.168.43.156:3000/api/getDoc/${item.value}`).then(
+                fetch(`http://portrates.herokuapp.com/api/getDoc/${item.value}`).then(
                   response => response.json()).then(responseJson => {
                     this.setState({
                       isLoading: false,
