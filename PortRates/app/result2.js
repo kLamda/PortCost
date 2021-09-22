@@ -1,7 +1,7 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
-import {ForeignParadeep} from "./helper.js";
+import {ForeignParadeep, CoastalParadeep} from "./helper.js";
 import Loader from "./loader.js";
 
 class Try extends React.Component {
@@ -29,74 +29,58 @@ class Try extends React.Component {
           SGST: 0,
           CGST: 0,
           isLoading: false,
+          portType: null,
+          calcType: null
       }
     }
-    
-    
-    // list = () => {
-    //   return this.state.btnDetails.map((element, key) => {
-    //     return (
-    //       <View key={key} style={styles.btnRow}>
-    //           <View style={styles.btnColumn}>
-    //             <Pressable style={[styles.btn, {backgroundColor: element.checkBtnLeft ? '#ff0000' : '#00ff00'}]} onPress={element.leftBtnOnPress}>
-    //               <Text style={styles.btnText}>{element.leftBtnTitle}</Text>
-    //             </Pressable>
-    //           </View>
-    //           <View style={styles.btnColumn}>
-    //             <Pressable style={[styles.btn, {backgroundColor:this.state.checkBtn2 ? '#ff0000' : '#00ff00'}]} onPress={() => {
-    //               this.setState(prevState => ({
-    //                 checkBtn2: !prevState.checkBtn2
-    //                 }));
-    //               }} >
-    //               <Text style={styles.btnText}>{element.rightBtnTitle}</Text>
-    //             </Pressable>
-    //           </View>
-    //         </View>
-    //     );
-    //   });
-    // };
 
     render() {
       let DollarVal = 20;
-      let portType = null;
-      let calcType = null;
-      let choosePortDues = this.state.checkBtn1 ? true : false;
-      let choosePilotage = this.state.checkBtn2 ? true : false;
-      let ChooseBirthHire = this.state.checkBtn3 ? true : false;
-      let Garbage = this.state.checkBtn6 ? true : false;
-      let CGST = this.state.checkBtn8 ? true : false;
-      let SGST = this.state.checkBtn7 ? true : false;
+      let CGST = this.state.checkBtn8 ? 0.09 : 0;
+      let SGST = this.state.checkBtn7 ? 0.09 : 0;
+      
       submit = () => {
-        let finalResult = ForeignParadeep(
-          choosePortDues,
-          choosePilotage,
-          ChooseBirthHire,
-          this.state.HGRT, 
-          this.state.shifts, 
-          this.state.Hours, 
-          this.state.WaterUSG, 
-          this.state.waterChargeType, 
-          this.state.cancellations, 
-          Garbage, 
-          SGST, 
-          CGST, 
-          DollarVal);
-          console.log(finalResult);
-          this.props.navigation.navigate('Result', {value: finalResult});
-          // console.log({
-          //   HGRT: this.state.HGRT,
-          //   shifts: this.state.shifts,
-          //   Hours: this.state.Hours,
-          //   WaterUSG: this.state.WaterUSG,
-          //   waterChargeType: this.state.waterChargeType,
-          //   cancellations: this.state.cancellations,
-          //   Garbage: this.state.Garbage,
-          //   SGST: this.state.SGST,
-          //   CGST: this.state.CGST,
-          //   DollarVal: DollarVal,
-          //   portType: portType,
-          //   calcType: calcType
-          // })
+        let arr = [this.state.portType, this.state.calcType, this.state.HGRT];
+        let btnCheck = [this.state.checkBtn1, this.state.checkBtn2, this.state.checkBtn3, this.state.checkBtn4, this.state.checkBtn5, this.state.checkBtn6, this.state.checkBtn7, this.state.checkBtn8];
+        let valChecker = arr.every(item => item != null && item != 0);
+        let btnChecker = btnCheck.some(item => item == true);
+        if(valChecker == false) {
+          Alert.alert("Please provide input values");
+        } else if(btnChecker == false) {
+          Alert.alert("Please select any button");
+        } else if(this.state.checkBtn4 == true && this.state.waterChargeType == null) {
+          Alert.alert("Please select Water Charge Type");
+        } else{
+        if(this.state.portType=="Paradeep" && this.state.calcType=="Foreign") {
+          let finalResult = ForeignParadeep(
+            this.state.HGRT, 
+            this.state.checkBtn2,
+            this.state.shifts, 
+            this.state.Hours, 
+            this.state.WaterUSG, 
+            this.state.waterChargeType, 
+            this.state.cancellations, 
+            this.state.checkBtn6 ? 1000 : 0, 
+            SGST, 
+            CGST, 
+            DollarVal);
+            this.props.navigation.navigate('Result', {value: finalResult});
+          } else if (this.state.portType=="Paradeep" && this.state.calcType == "Coastal"){
+            let finalResult = CoastalParadeep(
+            this.state.HGRT, 
+            this.state.checkBtn2,
+            this.state.shifts, 
+            this.state.Hours, 
+            this.state.WaterUSG, 
+            this.state.waterChargeType, 
+            this.state.cancellations, 
+            this.state.checkBtn6 ? 500 : 0, 
+            SGST, 
+            CGST, 
+            DollarVal);
+            this.props.navigation.navigate('Result', {value: finalResult});
+          }
+        } 
       }
       return (
         <ScrollView style={styles.container}>
@@ -198,8 +182,7 @@ class Try extends React.Component {
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Calculation Type"
               onChangeItem = {item => {
-                calcType = item.value;
-                this.setState({isLoading: true});
+                this.setState({isLoading: true, calcType : item.value});
                 fetch(`http://192.168.43.156:3000/api/getDoc/${item.value}`).then(
                   response => response.json()).then(responseJson => {
                     this.setState({
@@ -224,7 +207,7 @@ class Try extends React.Component {
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Port"
-              onChangeItem = {item => {portType = item.value;}}
+              onChangeItem = {item => {this.setState({portType :item.value});}}
             /> : null }
             <View style={styles.inputText}>
               <TextInput

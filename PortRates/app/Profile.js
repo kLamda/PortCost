@@ -7,7 +7,7 @@ export default function Profile ({ navigation, route }) {
     let userData = route.params;
     return (
         <View style={{ paddingVertical: 20 }}>
-            <Card title="John Doe">
+            <Card>
             <View
                 style={{
                 backgroundColor: "#bcbec1",
@@ -24,6 +24,8 @@ export default function Profile ({ navigation, route }) {
             </View>
             <View>
                 <Text>Name : {userData.userName}</Text>
+                <Text>Email address : {userData.email}</Text>
+                <Text>Phone number : {userData.phone}</Text>
                 <Text>Days Left : {userData.daysLeft}</Text>
             </View>
             <View style={{marginTop: 20}}>

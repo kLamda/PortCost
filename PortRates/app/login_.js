@@ -28,9 +28,9 @@ export default class Login extends Component {
     if(this.state.email === '' && this.state.password === '') {
       Alert.alert('Enter details to signin!')
     } else {
-      this.setState({
-        isLoading: true,
-      })
+    this.setState({
+      isLoading: true,
+    })
     let dataToSend = {email: this.state.email, password: this.state.password};
     fetch("http://192.168.43.156:3000/api/login", {
       method: "POST",
@@ -55,7 +55,9 @@ export default class Login extends Component {
                     "user_id": responseOJSON.user_id,
                     "userName": responseOJSON.userName,
                     "daysLeft" : responseOJSON.daysLeft,
-                    "collection" : responseIJSON.collection
+                    "collection" : responseIJSON.collection,
+                    "email" : responseOJSON.userEmail,
+                    "phone" : responseOJSON.phone,
                   })
                 }else{
                 navigation.replace('Signup')
@@ -64,6 +66,7 @@ export default class Login extends Component {
             }
           )
         } else {
+          this.setState({isLoading: false});
           Alert.alert('Invalid email or password!')
           this.props.navigation.navigate('Login')
         }

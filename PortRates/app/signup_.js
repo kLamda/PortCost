@@ -12,10 +12,10 @@ export default class Signup extends Component {
     super();
     this.state = { 
       dimension: Dimensions.get('window'),
-      displayName: '',
-      email: '', 
-      password: '',
-      phone: '',
+      displayName: null,
+      email: null, 
+      password: null,
+      phone: null,
       isLoading: false
     }
   }
@@ -28,50 +28,65 @@ export default class Signup extends Component {
   }
   
   registerUser = () => {
-    if(this.state.email === '' && this.state.password === '') {
+    if(this.state.email === null || this.state.password === null || this.state.displayName === null || this.state.phone === null) {
       Alert.alert('Enter details to signup!')
     } else {
       this.setState({
         isLoading: true,
       })
-    let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password, phone: this.state.phone};
-    fetch("http://192.168.43.156:3000/api/register", {
-      method: "POST",
-      body: JSON.stringify(dataToSend),
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-    }).then((responseO) => responseO.json())
-    .then((responseOJSON) => {
-        if(responseOJSON.status === true) {
-          fetch("http://192.168.43.156:3000/api/getCol").then(
-            (responseI) => responseI.json()).then(
-              (responseIJSON) => {
-                if(responseIJSON.status === true) {
-                  this.setState({
-                    isLoading: false,
-                    email: '', 
-                    password: ''
-                  });
-                  AsyncStorage.setItem('user_id', responseOJSON.user_id);
-                  this.props.navigation.navigate('SignedIn', {
-                    "user_id": responseOJSON.user_id,
-                    "userName": responseOJSON.userName,
-                    "daysLeft" : responseOJSON.daysLeft
-                  })
-                }else{
-                navigation.replace('Signup')
-                console.log("Inner fetch compromised");
+    fetch(`https://emailvalidation.abstractapi.com/v1/?api_key=6207353c54624d05acb8a1260f1db7d4&email=${this.state.email}&auto_correct=false`).then(
+      (response) => response.json()
+    ).then(
+      (responseJson) => {
+        if(responseJson.quality_score>0.5){
+          let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password, phone: this.state.phone};
+          fetch("http://192.168.43.156:3000/api/register", {
+            method: "POST",
+            body: JSON.stringify(dataToSend),
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8",
+            },
+          }).then((responseO) => responseO.json())
+          .then((responseOJSON) => {
+              if(responseOJSON.status === true) {
+                fetch("http://192.168.43.156:3000/api/getCol").then(
+                  (responseI) => responseI.json()).then(
+                    (responseIJSON) => {
+                      if(responseIJSON.status === true) {
+                        this.setState({
+                          isLoading: false,
+                          email: '', 
+                          password: ''
+                        });
+                        AsyncStorage.setItem('user_id', responseOJSON.user_id);
+                        this.props.navigation.navigate('SignedIn', {
+                          "user_id": responseOJSON.user_id,
+                          "userName": responseOJSON.userName,
+                          "daysLeft" : responseOJSON.daysLeft,
+                          "collection" : responseIJSON.collection,
+                          "email" : responseOJSON.userEmail,
+                          "phone" : responseOJSON.phone,
+                        })
+                      }else{
+                      navigation.replace('Signup')
+                      console.log("Inner fetch compromised");
+                    }
+                  }
+                )
+              } else {
+                this.setState({isLoading: false});
+                this.props.navigation.navigate('Signup')
+                Alert.alert(responseOJSON.message)
               }
-            }
-          )
-        } else {
+            })
+            .catch(error => console.log(error)) 
+        }else{
+          this.setState({isLoading: false});
           this.props.navigation.navigate('Signup')
-          Alert.alert(responseOJSON.message)
+          Alert.alert('Enter a valid email address!')
         }
-      })
-      .catch(error => console.log(error)) 
-    }
+      }
+    )};
   }
 
   render() {

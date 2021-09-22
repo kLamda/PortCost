@@ -23,7 +23,9 @@ const SplashScreen = ({navigation}) => {
                   "user_id": responseOJSON.user_id,
                   "userName": responseOJSON.userName,
                   "daysLeft" : responseOJSON.daysLeft,
-                  "collection": responseIJSON.collection
+                  "collection": responseIJSON.collection,
+                  "email" : responseOJSON.userEmail,
+                  "phone" : responseOJSON.phone,
                 })
                 } else {
                   navigation.replace('Signup')
