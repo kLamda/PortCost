@@ -1,15 +1,17 @@
 // components/login.js
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loader from './loader'
+import { Dimensions } from 'react-native';
 
 export default class Login extends Component {
   
   constructor() {
     super();
     this.state = { 
+      dimension: Dimensions.get('window'),
       email: '', 
       password: '',
       isLoading: false
@@ -64,6 +66,10 @@ export default class Login extends Component {
     return (
       <View style={styles.container}> 
         <Loader loading={this.state.isLoading} /> 
+        <Image style={[styles.topImage, {width: this.state.dimension.width}]} source={require("../assets/top1.png")} />
+        <Image style={[styles.topImage, {width: this.state.dimension.width}]} source={require("../assets/top2.png")} />
+        <Image style={[styles.bottomImage, {width: this.state.dimension.width}]} source={require("../assets/bottom1.png")} />
+        <Image style={[styles.bottomImage, {width: this.state.dimension.width}]} source={require("../assets/bottom2.png")} />
         <TextInput
           style={styles.inputStyle}
           placeholder="Email"
@@ -102,6 +108,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 35,
     backgroundColor: '#fff'
+  },
+  topImage:{
+    position: "absolute",
+    top: 0,
+    right: 0,
+    resizeMode: "stretch",
+  },
+  bottomImage: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    resizeMode: "stretch",
   },
   inputStyle: {
     width: '100%',

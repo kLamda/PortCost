@@ -8,6 +8,7 @@ const userSchema = new Schema({
     userName: {type: String, required: true},
     email: {type: String, required: true},
     // password: {type: String, required: true},
+    phone:{type: Number, required: true},
     daysAllowed: {type: Number, default: 3},
     hash : String,
     salt : String

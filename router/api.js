@@ -79,6 +79,7 @@ router.post('/register', (req, res) => {
                     user.email = req.body.email;
                     user.setPassword(req.body.password);
                     user._id = new mongoose.Types.ObjectId()
+                    user.phone = req.body.phone;
                     user.save()
                         .then(
                             result => {

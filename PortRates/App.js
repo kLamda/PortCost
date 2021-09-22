@@ -13,21 +13,11 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash" screenOptions={{
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: '#3740FE',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
-        >
+      <Stack.Navigator initialRouteName="Splash" >
         <Stack.Screen name="SignedIn" component={SignedIn} options={{ headerShown: false }}/>
         <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }}/>   
-        <Stack.Screen name="Signup" component={Signup} options={{ title: 'Signup' }} />   
-        <Stack.Screen name="Login" component={Login} options={{title: 'Login'}} />
+        <Stack.Screen name="Signup" component={Signup} options={{ title: 'Signup', headerShown: false }} />   
+        <Stack.Screen name="Login" component={Login} options={{title: 'Login', headerShown: false}} />
         <Stack.Screen name="Result" component={EndPage} />
       </Stack.Navigator>
     </NavigationContainer>

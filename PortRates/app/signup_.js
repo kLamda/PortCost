@@ -1,21 +1,25 @@
 //signup.js
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loader from './loader';
+import { Dimensions } from 'react-native';
 
 export default class Signup extends Component {
   
   constructor() {
     super();
     this.state = { 
+      dimension: Dimensions.get('window'),
       displayName: '',
       email: '', 
       password: '',
+      phone: '',
       isLoading: false
     }
   }
+
 
   updateInputVal = (val, prop) => {
     const state = this.state;
@@ -30,7 +34,7 @@ export default class Signup extends Component {
       this.setState({
         isLoading: true,
       })
-    let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password};
+    let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password, phone: this.state.phone};
     fetch("http://portrates.herokuapp.com/api/register", {
       method: "POST",
       body: JSON.stringify(dataToSend),
@@ -60,11 +64,14 @@ export default class Signup extends Component {
     }
   }
 
-  render() {  
+  render() {
     return (
       <View style={styles.container}>  
         <Loader loading={this.state.isLoading} /> 
-        
+        <Image style={[styles.topImage, {width: this.state.dimension.width}]} source={require("../assets/top1.png")} />
+        <Image style={[styles.topImage, {width: this.state.dimension.width}]} source={require("../assets/top2.png")} />
+        <Image style={[styles.bottomImage, {width: this.state.dimension.width}]} source={require("../assets/bottom1.png")} />
+        <Image style={[styles.bottomImage, {width: this.state.dimension.width}]} source={require("../assets/bottom2.png")} />
         <TextInput
           style={styles.inputStyle}
           placeholder="Name"
@@ -76,6 +83,13 @@ export default class Signup extends Component {
           placeholder="Email"
           value={this.state.email}
           onChangeText={(val) => this.updateInputVal(val, 'email')}
+        />
+        <TextInput
+          style={styles.inputStyle}
+          keyboardType='numeric'
+          placeholder="Phone"
+          value={this.state.phone}
+          onChangeText={(val) => this.updateInputVal(val, 'phone')}
         />
         <TextInput
           style={styles.inputStyle}
@@ -104,11 +118,21 @@ export default class Signup extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
     justifyContent: "center",
     padding: 35,
     backgroundColor: '#fff'
+  },
+  topImage:{
+    position: "absolute",
+    top: 0,
+    right: 0,
+    resizeMode: "stretch",
+  },
+  bottomImage: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    resizeMode: "stretch",
   },
   inputStyle: {
     width: '100%',
