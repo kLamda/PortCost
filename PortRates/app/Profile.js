@@ -4,7 +4,8 @@ import { Card, Button, Text } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Profile ({ navigation, route }) {
-    let userData = route.params;
+    let userData = route.params.user;
+    let error = route.params.error;
     return (
         <View style={{ paddingVertical: 20 }}>
             <Card>
@@ -18,8 +19,7 @@ export default function Profile ({ navigation, route }) {
                 borderRadius: 40,
                 alignSelf: "center",
                 marginBottom: 20
-                }}
-            >
+                }}>
                 <Text style={{ color: "white", fontSize: 28 }}>{userData.userName[0]}</Text>
             </View>
             <View>
@@ -27,6 +27,9 @@ export default function Profile ({ navigation, route }) {
                 <Text>Email address : {userData.email}</Text>
                 <Text>Phone number : {userData.phone}</Text>
                 <Text>Days Left : {userData.daysLeft}</Text>
+            </View>
+            <View style={{ marginTop: 20, alignItems: "center" }}>
+                <Text style={{color: "red", fontSize: 20}}>{error}</Text>
             </View>
             <View style={{marginTop: 20}}>
             <Button

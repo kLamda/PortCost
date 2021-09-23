@@ -10,6 +10,12 @@ const Tab = createBottomTabNavigator();
 
 export function SignedIn({route}){
   let data = route.params;
+  let error = null;
+  if(data.isVesAgent==false && data.isStevedore==false && data.isExpImp==false){
+    error = "Kindly Contact Admin to Provide either Access.";
+  }else{
+    error = null;
+  }
   return (
     <Tab.Navigator initialRouteName="Home" >
       {data.isVesAgent ?
@@ -33,7 +39,7 @@ export function SignedIn({route}){
           <MaterialCommunityIcons name="ship-wheel" size={24} color="black" />
         ),
       }} />: null }
-      <Tab.Screen name="Profile" initialParams={route.params} component={Profile} options={{
+      <Tab.Screen name="Profile" initialParams={{"user" : route.params ,"error" : error}} component={Profile} options={{
       tabBarLabel: 'Profile',
       tabBarIcon: ({ color, size }) => (
           <Ionicons name="person" color={color} size={size} />

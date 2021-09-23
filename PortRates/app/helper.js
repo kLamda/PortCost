@@ -8,8 +8,8 @@ export function ForeignParadeep(portDueChoose, LGRT, HGRT, pilotageChoose, Shift
     let Pilotage = 0;
     if (pilotageChoose){
         if(HGRT <= 30000){Pilotage += (0.56207 * DollarVal * HGRT)}
-        if(HGRT>30000 && HGRT<=60000){Pilotage += ((0.44945 * DollarVal * (HGRT - 30000)) + (16862 * DollarVal))}
-        if(HGRT>60000){Pilotage += ((0.393 * DollarVal * (HGRT - 60000)) + (30345.5 * DollarVal))}
+        if(HGRT>30000 && HGRT<=60000){Pilotage += (((0.44945 * (HGRT - 30000)) + 16862) * DollarVal)}
+        if(HGRT>60000){Pilotage += (((0.393 * (HGRT - 60000)) + 30345.5) * DollarVal)}
     }
     let ShiftingCost = Shifting * (Pilotage/2);
     let TotalCharge = PortDues + BerthHire + WaterCharge + ShiftingCost + Pilotage + Garbage - Cancellation;
