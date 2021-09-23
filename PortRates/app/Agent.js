@@ -2,9 +2,10 @@ import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
 import {ForeignParadeep, CoastalParadeep} from "./helper.js";
+import { HOST } from "./host.js";
 import Loader from "./loader.js";
 
-class Try extends React.Component {
+class Agent extends React.Component {
 
     constructor(props) {
       super(props);
@@ -199,7 +200,7 @@ class Try extends React.Component {
               placeholder= "Select Port Type"
               onChangeItem = {item => {
                 this.setState({isLoading: true, portType : item.value});
-                fetch(`http://portrates.herokuapp.com/api/getDoc/${item.value}`).then(
+                fetch(`${HOST}/api/getDoc/${item.value}`).then(
                   response => response.json()).then(responseJson => {
                     this.setState({
                       isLoading: false,
@@ -370,4 +371,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Try;
+export default Agent;

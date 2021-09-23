@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, TextInput, Button, Alert, Image } from 'react-n
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loader from './loader'
 import { Dimensions } from 'react-native';
+import { HOST } from './host';
 
 export default class Login extends Component {
   
@@ -32,7 +33,7 @@ export default class Login extends Component {
       isLoading: true,
     })
     let dataToSend = {email: this.state.email, password: this.state.password};
-    fetch("http://portrates.herokuapp.com/api/login", {
+    fetch(`${HOST}/api/login`, {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {
@@ -41,7 +42,7 @@ export default class Login extends Component {
     }).then((responseO) => responseO.json())
     .then((responseOJSON) => {
         if(responseOJSON.status === true) {
-          fetch("http://portrates.herokuapp.com/api/getCol").then(
+          fetch(`${HOST}/api/getCol`).then(
             (responseI) => responseI.json()).then(
               (responseIJSON) => {
                 if(responseIJSON.status === true) {
@@ -58,6 +59,9 @@ export default class Login extends Component {
                     "collection" : responseIJSON.collection,
                     "email" : responseOJSON.userEmail,
                     "phone" : responseOJSON.phone,
+                    "isVesAgent" : responseOJSON.isVesAgent,
+                    "isExpImp" : responseOJSON.isExpImp,
+                    "isStevedore" : responseOJSON.isStevedore,
                   })
                 }else{
                 navigation.replace('Signup')

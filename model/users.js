@@ -10,6 +10,9 @@ const userSchema = new Schema({
     // password: {type: String, required: true},
     phone:{type: Number, required: true},
     daysAllowed: {type: Number, default: 3},
+    isVesAgent: {type: Boolean, default: false},
+    isExpImp: {type: Boolean, default: false},
+    isStevedore: {type: Boolean, default: false},
     hash : String,
     salt : String
 },

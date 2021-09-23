@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottiePreloader from './lottieLoader';
+import { HOST } from './host';
 
 const SplashScreen = ({navigation}) => {
   useEffect( () => {
     AsyncStorage.getItem('user_id').then((value) =>{
-      fetch("http://portrates.herokuapp.com/api/getTime", {
+      fetch(`${HOST}/api/getTime`, {
         method: "POST",
         body: JSON.stringify({"user_id": value}),
         headers: {
@@ -14,7 +15,7 @@ const SplashScreen = ({navigation}) => {
       }).then((responseO) => responseO.json())
       .then((responseOJSON) => {
         if(responseOJSON.status === true){
-          fetch("http://portrates.herokuapp.com/api/getCol").then(
+          fetch(`${HOST}/api/getCol`).then(
             (responseI) => responseI.json()).then(
               (responseIJSON) => {
                 if(responseIJSON.status === true) {
@@ -25,6 +26,9 @@ const SplashScreen = ({navigation}) => {
                   "collection": responseIJSON.collection,
                   "email" : responseOJSON.userEmail,
                   "phone" : responseOJSON.phone,
+                  "isVesAgent" : responseOJSON.isVesAgent,
+                  "isExpImp" : responseOJSON.isExpImp,
+                  "isStevedore" : responseOJSON.isStevedore,
                 })
                 } else {
                   navigation.replace('Signup')

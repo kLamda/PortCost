@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, TextInput, Button, Alert, Image } from 'react-n
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loader from './loader';
 import { Dimensions } from 'react-native';
+import { EMAIL_URI, HOST } from './host';
 
 export default class Signup extends Component {
   
@@ -34,13 +35,13 @@ export default class Signup extends Component {
       this.setState({
         isLoading: true,
       })
-    fetch(`https://emailvalidation.abstractapi.com/v1/?api_key=6207353c54624d05acb8a1260f1db7d4&email=${this.state.email}&auto_correct=false`).then(
+    fetch(`${EMAIL_URI}&email=${this.state.email}&auto_correct=false`).then(
       (response) => response.json()
     ).then(
       (responseJson) => {
         if(responseJson.quality_score>0.5){
           let dataToSend = {userName: this.state.displayName, email: this.state.email, password: this.state.password, phone: this.state.phone};
-          fetch("http://portrates.herokuapp.com/api/register", {
+          fetch(`${HOST}/api/register`, {
             method: "POST",
             body: JSON.stringify(dataToSend),
             headers: {
@@ -49,7 +50,7 @@ export default class Signup extends Component {
           }).then((responseO) => responseO.json())
           .then((responseOJSON) => {
               if(responseOJSON.status === true) {
-                fetch("http://portrates.herokuapp.com/api/getCol").then(
+                fetch(`${HOST}/api/getCol`).then(
                   (responseI) => responseI.json()).then(
                     (responseIJSON) => {
                       if(responseIJSON.status === true) {
@@ -66,6 +67,9 @@ export default class Signup extends Component {
                           "collection" : responseIJSON.collection,
                           "email" : responseOJSON.userEmail,
                           "phone" : responseOJSON.phone,
+                          "isVesAgent" : responseOJSON.isVesAgent,
+                          "isExpImp" : responseOJSON.isExpImp,
+                          "isStevedore" : responseOJSON.isStevedore,
                         })
                       }else{
                       navigation.replace('Signup')

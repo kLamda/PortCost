@@ -61,7 +61,10 @@ router.post('/getTime', (req, res) =>{
                         message: 'User login success',
                         status: true,
                         daysLeft: result.daysAllowed - days,
-                        phone: result.phone
+                        phone: result.phone,
+                        isVesAgent: result.isVesAgent,
+                        isExpImp: result.isExpImp,
+                        isStevedore: result.isStevedore,
                     })
                 }
             } else {
@@ -114,7 +117,10 @@ router.post('/register', (req, res) => {
                                     message: 'User register success',
                                     status: true,
                                     daysLeft: result.daysAllowed - calcTime(new Date().getTime(), result.createdAt.getTime()),
-                                    phone: result.phone
+                                    phone: result.phone,
+                                    isVesAgent: result.isVesAgent,
+                                    isExpImp: result.isExpImp,
+                                    isStevedore: result.isStevedore,
                                 })
                             }
                         )
@@ -156,7 +162,10 @@ router.post('/login', (req, res) => {
                             message: 'User login success',
                             status: true,
                             daysLeft: result.daysAllowed - days,
-                            phone: result.phone
+                            phone: result.phone,
+                            isVesAgent: result.isVesAgent,
+                            isExpImp: result.isExpImp,
+                            isStevedore: result.isStevedore,
                         })
                     } else {
                         res.json({
