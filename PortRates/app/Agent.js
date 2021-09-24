@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
+import { RefreshControl ,TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
 import {ForeignParadeep, CoastalParadeep, VesselGopalapur} from "./helper.js";
 import { HOST } from "./host.js";
@@ -180,7 +180,11 @@ class Agent extends React.Component {
       }
       
       return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} refreshControl={
+          <RefreshControl
+            onRefresh={() => this.props.navigation.navigate('Splash')}
+            />
+          }>
           <Loader loading={this.state.isLoading} />
           <View style={styles.inputContainer}>
             <DropDownPicker

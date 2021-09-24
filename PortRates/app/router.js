@@ -17,7 +17,7 @@ export function SignedIn({route}){
     error = null;
   }
   return (
-    <Tab.Navigator initialRouteName="Home" >
+    <Tab.Navigator initialRouteName="Home">
       {data.isVesAgent ?
       <Tab.Screen name="Agent" initialParams={route.params} component={Agent} options={{
       tabBarLabel: 'Agent',
