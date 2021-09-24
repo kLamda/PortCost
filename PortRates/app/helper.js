@@ -17,17 +17,18 @@ export function ForeignParadeep(portDueChoose, LGRT, HGRT, pilotageChoose, Shift
     let CGSTCost = CGST * TotalCharge;
     let FinalCost = TotalCharge + SGSTCost + CGSTCost;
     return {
-        PortDues: PortDues,
-        BerthHire: BerthHire,
-        WaterCharge: WaterCharge,
-        Pilotage: Pilotage,
-        Cancellation: Cancellation,
-        GarbageCost: Garbage,
-        ShiftingCost: ShiftingCost,
-        SGSTCost: SGSTCost,
-        CGSTCost: CGSTCost,
-        TotalCharge: TotalCharge,
-        FinalCost: FinalCost,
+        calcVal: {"Port Dues": PortDues,
+        "Berth Hire": BerthHire,
+        "Water Charge": WaterCharge,
+        "Pilotage": Pilotage,
+        "Cancellation": Cancellation,
+        "Garbage Cost": Garbage,
+        "Shifting Cost": ShiftingCost,
+        "SGST Cost": SGSTCost,
+        "CGST Cost": CGSTCost,
+        "Total Charge": TotalCharge,},
+        finalCost: {"Final Cost": FinalCost},
+        isParadeep: true
     }
 }
 
@@ -50,17 +51,18 @@ export function CoastalParadeep(portDueChoose,LGRT, HGRT, pilotageChoose, Shifti
     let CGSTCost = CGST * TotalCharge;
     let FinalCost = TotalCharge + SGSTCost + CGSTCost;
     return {
-        PortDues: PortDues,
-        BerthHire: BerthHire,
-        WaterCharge: WaterCharge,
-        Pilotage: Pilotage,
-        Cancellation: Cancellation,
-        GarbageCost: Garbage,
-        ShiftingCost: ShiftingCost,
-        SGSTCost: SGSTCost,
-        CGSTCost: CGSTCost,
-        TotalCharge: TotalCharge,
-        FinalCost: FinalCost,
+        calcVal: {"Port Dues": PortDues,
+        "Berth Hire": BerthHire,
+        "Water Charge": WaterCharge,
+        "Pilotage": Pilotage,
+        "Cancellation": Cancellation,
+        "Garbage Cost": Garbage,
+        "Shifting Cost": ShiftingCost,
+        "SGST Cost": SGSTCost,
+        "CGST Cost": CGSTCost,
+        "Total Charge": TotalCharge,},
+        finalCost: {"Final Cost": FinalCost},
+        isParadeep: true
     }
 }
 
@@ -97,20 +99,23 @@ export function VesselGopalapur(VesChoose, Shift, WarpChoose, HGRT, AncHrs, PilC
         }
     }
     let TotalCharge = VesCharge + ShiftingCost + WarpCost + AnchorageCost + PilCancCost + PilDetCost + TugCost + PenBerthCost + ColdMoveCost + GarbageCost + ShpChndCost + PenCost + WharfageCost;
+    let FinalCost = TotalCharge;
     return {
-        "Vessel Charge": VesCharge,
+        calcVal: {"Vessel Charge": VesCharge,
         "Shifting Cost": ShiftingCost,
         "Warping Cost": WarpCost,
         "Anchorage Cost": AnchorageCost,
-        "Pilot Cancellation Cost": PilCancCost,
-        "Pilot Detention Cost": PilDetCost,
+        "Pilot Cancellation": PilCancCost,
+        "Pilot Detention ": PilDetCost,
         "Tug Hire Cost": TugCost,
-        "Penal Berth Hire Cost": PenBerthCost,
+        "Penal Berth Hire": PenBerthCost,
         "Cold Move Cost": ColdMoveCost,
         "Garbage Cost": GarbageCost,
-        "Ship Chandling Cost": ShpChndCost,
+        "Ship Chandling": ShpChndCost,
         "Penanlty Charge": PenCost,
         "Wharfage Cost": WharfageCost,
-        "Total Charge": TotalCharge,
+        "Total Charge": TotalCharge,},
+        finalCost:{"Final Cost": FinalCost},
+        isGopalapur: true
     }
 }
