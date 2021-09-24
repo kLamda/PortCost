@@ -196,7 +196,7 @@ class Agent extends React.Component {
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Port Type"
               onChangeItem = {item => {
-                this.setState({isLoading: true, portType : item.value});
+                this.setState({isLoading: true, portType : item.value, calcType: null, calcCollection: null});
                 fetch(`${HOST}/api/getDoc/${item.value}`).then(
                   response => response.json()).then(responseJson => {
                     this.setState({
