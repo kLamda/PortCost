@@ -1,7 +1,7 @@
 import React from "react";
 import { RefreshControl ,TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
-import {ForeignParadeep, CoastalParadeep, VesselGopalapur} from "./helper.js";
+import {ForeignParadeep, CoastalParadeep, VesselGopalapur, TamilNadu} from "./helper.js";
 import { HOST } from "./host.js";
 import Loader from "./loader.js";
 
@@ -47,7 +47,8 @@ class Agent extends React.Component {
           Coll: 0,
           Bill: 0,
           Inc : 0,
-          WtrUsg : 0
+          WtrUsg : 0,
+          pDueChoice : 0
         }
     }
 
@@ -84,7 +85,7 @@ class Agent extends React.Component {
     }
 
     validButton = (port, calc) => {
-      if(port=="Paradeep" && calc=="Coastal" || calc=="Foreign"){
+      if(port=="Paradeep" && (calc=="Coastal" || calc=="Foreign")){
         return [
           {0: "Port Dues", 1: "Pilotage/Towage"},
           {2: "Berth Hire", 3: "Water Charge"},
@@ -97,9 +98,14 @@ class Agent extends React.Component {
           {4: "Cancellation", 5: "Detention"},
           {6: "Tug Hire", 7: "Berth Hire"},
           {8: "Cold Move", 9: "Garbage"},
-          {10: "Chandling", 11: "Penanlty"},
-          {12: "Wharfage"}
+          {10: "Chandling", 11: "Penanlty"}
         ]
+      } else if(port=="Tamil Nadu" && (calc=="Foreign" || calc=="Coastal")){
+        return [
+          {0: "Port Dues", 1: "Berth Hire"},
+          {2: "Pilotage Fee", 3: "Shifting Charge"},
+          {4: "SGST", 5: "CGST"},
+          {6: "Anchorage"}]
       }
     }
 
@@ -176,10 +182,25 @@ class Agent extends React.Component {
             DollarVal
           );
           this.props.navigation.navigate('Result', {value: finalResult});
+        } else if(this.state.portType=="Tamil Nadu"){
+          let finalResult = TamilNadu(
+            this.state.checkBtn1 ? this.state.pDueChoice : null,
+            this.state.HGRT,
+            this.state.checkBtn2,
+            this.state.checkBtn3,
+            this.state.checkBtn4,
+            this.state.checkBtn7 ? this.state.AncHrs : 0,
+            this.state.checkBtn5 ? this.state.SGST : 0,
+            this.state.checkBtn6 ? this.state.CGST : 0,
+            DollarVal,
+            this.state.calcType
+          );
+          this.props.navigation.navigate('Result', {value: finalResult});
+          // console.log(finalResult);
         }
       }
       
-      return (
+      return ( 
         <ScrollView style={styles.container} refreshControl={
           <RefreshControl
             onRefresh={() => this.props.navigation.navigate('Splash')}
@@ -266,7 +287,7 @@ class Agent extends React.Component {
                 onChangeText={LGRT => this.setState({LGRT})}
               />
             </View>:null}
-            {this.state.checkBtn2 ?
+            {this.state.checkBtn2 &&(this.state.portType=='Paradeep' || this.state.portType=='Gopalapur') ?
             <View style={styles.inputText}>
               <TextInput
                 style={styles.input}
@@ -415,6 +436,30 @@ class Agent extends React.Component {
                 onChangeText={WtrUsg => this.setState({WtrUsg})}
               />
             </View>:null}
+            {this.state.checkBtn7 && this.state.portType== "Tamil Nadu" ?
+            <View style={styles.inputText}>
+              <TextInput
+                style={styles.input}
+                placeholder="Input Anchorage Hrs"
+                keyboardType="numeric"
+                onChangeText={AncHrs => this.setState({AncHrs})}
+              />
+            </View> : null}
+            {this.state.checkBtn1 && this.state.portType== "Tamil Nadu" ?
+            <DropDownPicker
+              items={[{label: "Ship/Streamers", value: 0}, {label: "Sailing", value: 1}]}
+              containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+              itemStyle={{
+                  justifyContent: 'center',
+              }}
+              labelStyle={{
+                  fontSize: 16,
+                  color: '#000'
+              }}
+              dropDownStyle={{backgroundColor: '#D7E2FE'}}
+              placeholder= "Select Port Dues Calculation Type"
+              onChangeItem = {item => this.setState({PilCanc: item.value})}
+            />:null}
             <TouchableOpacity style={styles.proceedBtn} onPress={submit}>
               <Text style={styles.btnText}>Proceed</Text>
             </TouchableOpacity>

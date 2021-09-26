@@ -16,6 +16,8 @@ export default class EndPage extends Component
          WtrChrgDiscount: 0,
          PilotageDiscount: 0,
          vesselDiscount: 0,
+         AnchorageDiscount: 0,
+         shiftDiscount: 0,
          tableData: this.generateDataTable(0),
          finalCost: this.generateDataTable(1),
          discTable: [],
@@ -23,8 +25,9 @@ export default class EndPage extends Component
          checkBtn2: false,
          checkBtn3: false,
          checkBtn4: false,
+         checkBtn5: false,
          portType: this.checkPort(),
-         discIndex: this.checkPort()=="Paradeep" ? 4 : 1
+         discIndex: this.discNumber()
     };
    }
 
@@ -37,6 +40,8 @@ export default class EndPage extends Component
           this.setState({checkBtn3: !this.state.checkBtn3})
         } else if(btn === 3) {
           this.setState({checkBtn4: !this.state.checkBtn4})
+        } else if(btn === 4) {
+          this.setState({checkBtn5: !this.state.checkBtn5})
         }
       }
 
@@ -45,7 +50,16 @@ export default class EndPage extends Component
       return arr.some(item => item == true) ? true : false;
    }
 
-   checkPort = () => (this.props.route.params.value.hasOwnProperty("isParadeep") ? "Paradeep" : "Gopalapur")
+   checkPort = () => (this.props.route.params.value.portType);
+
+   discNumber = () => {if (this.props.route.params.value.portType === "Paradeep") {
+      return 4
+   } else if(this.props.route.params.value.portType == "Gopalapur") {
+      return 1
+   } else {
+      return 5
+   }
+ }
 
    generateDataTable =(choice) => {
       var data = this.props.route.params.value;
@@ -68,16 +82,25 @@ export default class EndPage extends Component
       let WaterChargeDiscount = 0;
       let PilotageDiscount = 0;
       let vesselDiscount = 0;
+      let AnchorageDiscount = 0;
+      let shiftDiscount = 0;
       if(this.state.portType == "Paradeep"){
-         portDiscount = this.state.portDiscount * 0.01 * dataObj["Port Dues"];
-         BerthDiscount = this.state.BerthDiscount * 0.01 * dataObj["Berth Hire"];
-         WaterChargeDiscount = this.state.WtrChrgDiscount * 0.01 * dataObj["Water Charge"];
-         PilotageDiscount = this.state.PilotageDiscount * 0.01 * dataObj["Pilotage"];
+         portDiscount = Math.round(this.state.portDiscount * 0.01 * dataObj["Port Dues"]);
+         BerthDiscount = Math.round(this.state.BerthDiscount * 0.01 * dataObj["Berth Hire"]);
+         WaterChargeDiscount = Math.round(this.state.WtrChrgDiscount * 0.01 * dataObj["Water Charge"]);
+         PilotageDiscount = Math.round(this.state.PilotageDiscount * 0.01 * dataObj["Pilotage"]);
          TotalDiscount = portDiscount + BerthDiscount + WaterChargeDiscount + PilotageDiscount;
       }
-      else{
-         vesselDiscount= this.state.vesselDiscount * 0.01 * dataObj["Vessel Charge"];
+      else if(this.state.portType == "Gopalapur"){
+         vesselDiscount= Math.round(this.state.vesselDiscount * 0.01 * dataObj["Vessel Charge"]);
          TotalDiscount = vesselDiscount;
+      } else if(this.state.portType == "Tamil Nadu"){
+         portDiscount = Math.round(this.state.portDiscount * 0.01 * dataObj["Port Dues"]);
+         BerthDiscount = Math.round(this.state.BerthDiscount * 0.01 * dataObj["Berth Hire"]);
+         PilotageDiscount = Math.round(this.state.PilotageDiscount * 0.01 * dataObj["Pilotage"]);
+         AnchorageDiscount = Math.round(this.state.AnchorageDiscount * 0.01 * dataObj["Anchorage Cost"]);
+         shiftDiscount = Math.round(this.state.shiftDiscount * 0.01 * dataObj["Shifting"]);
+         TotalDiscount = AnchorageDiscount + shiftDiscount;
       }
       const styles = StyleSheet.create({
          container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#eee' },
@@ -154,6 +177,12 @@ export default class EndPage extends Component
                <Text style={styles.btnText}>-</Text>
                : <Text style={styles.btnText}>+</Text> }
             </View> : null}
+            {data == 4 ?
+            <View style={[styles.btn, {backgroundColor: this.state.checkBtn5 ? '#ff6600' : '#66ff99'}]}>
+               {this.state.checkBtn5 ?
+               <Text style={styles.btnText}>-</Text>
+               : <Text style={styles.btnText}>+</Text> }
+            </View> : null}
          </TouchableOpacity>
       );
    
@@ -220,6 +249,50 @@ export default class EndPage extends Component
                            }
                      </TableWrapper>:<TableWrapper></TableWrapper>} 
                   </Table>:null}
+                  {this.state.portType == "Tamil Nadu" && this.checkBtnClick() ?
+                  <Table style={{borderTopColor: "#AAA", borderWidth: 2}} borderStyle={{borderColor: 'transparent'}}>
+                     {this.state ?
+                     <TableWrapper style={styles.row}>
+                           {
+                              ["Port Dues Discount", "", portDiscount].map((cellData, cellIndex) => (
+                              <Cell key={cellIndex} data={cellData} textStyle={styles.text}/>
+                              ))
+                           }
+                     </TableWrapper>:<TableWrapper></TableWrapper>}
+                     {this.state.checkBtn2 ?
+                     <TableWrapper style={styles.row}>
+                           {
+                              ["Berth Hire Discount", "", BerthDiscount].map((cellData, cellIndex) => (
+                              <Cell key={cellIndex} data={cellData} textStyle={styles.text}/>
+                              ))
+                           }
+                     </TableWrapper>:<TableWrapper></TableWrapper>}
+                     
+                     {this.state.checkBtn4 ?
+                     <TableWrapper style={styles.row}>
+                           {
+                              ["Pilotage Discount", "", PilotageDiscount].map((cellData, cellIndex) => (
+                              <Cell key={cellIndex} data={cellData} textStyle={styles.text}/>
+                              ))
+                           }
+                     </TableWrapper>:<TableWrapper></TableWrapper>} 
+                     {this.state.checkBtn4 ?
+                     <TableWrapper style={styles.row}>
+                           {
+                              ["Shifting Discount", "", shiftDiscount].map((cellData, cellIndex) => (
+                              <Cell key={cellIndex} data={cellData} textStyle={styles.text}/>
+                              ))
+                           }
+                     </TableWrapper>:<TableWrapper></TableWrapper>}
+                     {this.state.checkBtn5 ?
+                     <TableWrapper style={styles.row}>
+                           {
+                              ["Anchcorage Discount", "", AnchorageDiscount].map((cellData, cellIndex) => (
+                              <Cell key={cellIndex} data={cellData} textStyle={styles.text}/>
+                              ))
+                           }
+                     </TableWrapper>:<TableWrapper></TableWrapper>}
+                  </Table>:null}
                   <Table borderStyle={{borderColor: "transparent"}}>
                      {this.checkBtnClick() ? 
                      <Row data={["Total Discount" , "", TotalDiscount]}  textStyle={styles.text}/>
@@ -278,6 +351,54 @@ export default class EndPage extends Component
                      />
                   </View>:null}
                </Card>:null}
+               {this.checkBtnClick() && this.state.portType=="Tamil Nadu" ?
+               <Card title="Discounts" borderRadius={10} containerStyle={styles.card}>
+                  {this.state.checkBtn1 ?
+                  <View style={styles.inputText}>
+                     <TextInput
+                        style={styles.input}
+                        placeholder="Input Port Dues Discount"
+                        keyboardType="numeric"
+                        onChangeText={portDiscount => this.setState({portDiscount})}
+                     />
+                  </View>:null}
+                  {this.state.checkBtn2 ?
+                  <View style={styles.inputText}>
+                     <TextInput
+                        style={styles.input}
+                        placeholder="Input Bert Hire Discount"
+                        keyboardType="numeric"
+                        onChangeText={BerthDiscount => this.setState({BerthDiscount})}
+                     />
+                  </View>:null}
+                  {this.state.checkBtn3 ?
+                  <View style={styles.inputText}>
+                     <TextInput
+                        style={styles.input}
+                        placeholder="Input Pilotgae Discount"
+                        keyboardType="numeric"
+                        onChangeText={PilotageDiscount => this.setState({PilotageDiscount})}
+                     />
+                  </View>:null}
+                  {this.state.checkBtn4 ?
+                  <View style={styles.inputText}>
+                     <TextInput
+                        style={styles.input}
+                        placeholder="Input Shifting Discount"
+                        keyboardType="numeric"
+                        onChangeText={shiftDiscount => this.setState({shiftDiscount})}
+                     />
+                  </View>:null}
+                  {this.state.checkBtn5 ?
+                  <View style={styles.inputText}>
+                     <TextInput
+                        style={styles.input}
+                        placeholder="Input Anchorage Discount"
+                        keyboardType="numeric"
+                        onChangeText={AnchorageDiscount => this.setState({AnchorageDiscount})}
+                     />
+                  </View>:null}
+               </Card> : null}
             </ScrollView>
             // <View style={styles.container}>
             
