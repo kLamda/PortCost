@@ -2,15 +2,26 @@ import React from "react";
 import { RefreshControl ,TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
 import {ForeignParadeep, CoastalParadeep, VesselGopalapur, TamilNadu} from "./helper.js";
-import { HOST } from "./host.js";
 import Loader from "./loader.js";
+import SelectBox from "react-native-multi-selectbox";
+import {xorBy} from "lodash";
 
 class Agent extends React.Component {
 
     constructor(props) {
       super(props);
       this.state = {
-          collections: this.props.route.params.collection.map(item => {return {label: item, value: item}}),
+          // collections: this.props.route.params.collection.map(item => {return {label: item, value: item}}),
+          collections: [
+            {label: "Paradeep", value:"Paradeep"}, 
+            {label: "Gopalapur", value:"Gopalapur"}, 
+            {label: "Tamil Nadu", value:"Tamil Nadu"},
+            {label: "Cochin", value:"Cochin"},
+            {label: "Kolkata", value:"Kolkata"},
+            {label: "Visakapatnam", value:"Visakapatnam"},
+            {label: "Chennai", value: "Chennai"},
+            {label: "New Mangalore", value: "New Mangalore"},
+          ],
           calcCollection: null,
           checkBtn1: false,
           checkBtn2: false,
@@ -33,8 +44,6 @@ class Agent extends React.Component {
           shifts: 0,
           cancellations: 0,
           Garbage: 0,
-          SGST: 0,
-          CGST: 0,
           isLoading: false,
           portType: null,
           calcType: null,
@@ -48,7 +57,8 @@ class Agent extends React.Component {
           Bill: 0,
           Inc : 0,
           WtrUsg : 0,
-          pDueChoice : 0
+          pDueChoice : 0,
+          subSelectedItems: [],
         }
     }
 
@@ -109,10 +119,12 @@ class Agent extends React.Component {
       }
     }
 
+    onMultiChange() {
+      return (item) => this.setState({subSelectedItems: xorBy(this.state.subSelectedItems, [item], 'id')});
+    }
+
     render() {
       let DollarVal = 74.43;
-      let CGST = this.state.checkBtn8 ? 0.09 : 0;
-      let SGST = this.state.checkBtn7 ? 0.09 : 0;
       let btnData = this.validButton(this.state.portType, this.state.calcType);
       
       submit = () => {
@@ -140,8 +152,8 @@ class Agent extends React.Component {
               this.state.checkBtn4 ? this.state.waterChargeType : 0, 
               this.state.checkBtn5 ? this.state.cancellations : 0,
               this.state.checkBtn6 ? 1000 : 0, 
-              SGST, 
-              CGST, 
+              this.state.checkBtn7 ? 0.09 : 0, 
+              this.state.checkBtn8 ? 0.09 : 0, 
               DollarVal);
               this.props.navigation.navigate('Result', {value: finalResult});
             } else if (this.state.calcType == "Coastal"){
@@ -156,8 +168,8 @@ class Agent extends React.Component {
               this.state.checkBtn4 ? this.state.waterChargeType : 0, 
               this.state.checkBtn5 ? this.state.cancellations : 0, 
               this.state.checkBtn6 ? 500 : 0, 
-              SGST,
-              CGST, 
+              this.state.checkBtn7 ? 0.09 : 0, 
+              this.state.checkBtn8 ? 0.09 : 0,  
               DollarVal);
               this.props.navigation.navigate('Result', {value: finalResult});
             }
@@ -190,8 +202,8 @@ class Agent extends React.Component {
             this.state.checkBtn3,
             this.state.checkBtn4,
             this.state.checkBtn7 ? this.state.AncHrs : 0,
-            this.state.checkBtn5 ? this.state.SGST : 0,
-            this.state.checkBtn6 ? this.state.CGST : 0,
+            this.state.checkBtn5 ? 0.09 : 0,
+            this.state.checkBtn6 ? 0.09 : 0,
             DollarVal,
             this.state.calcType
           );
@@ -199,6 +211,62 @@ class Agent extends React.Component {
           // console.log(finalResult);
         }
       }
+
+      const K_OPTIONS = [
+      {
+        item: 'Juventus',
+        id: 'JUVE',
+      },
+      {
+        item: 'Real Madrid',
+        id: 'RM',
+      },
+      {
+        item: 'Barcelona',
+        id: 'BR',
+      },
+      {
+        item: 'PSG',
+        id: 'PSG',
+      },
+      {
+        item: 'FC Bayern Munich',
+        id: 'FBM',
+      },
+      {
+        item: 'Manchester United FC',
+        id: 'MUN',
+      },
+      {
+        item: 'Manchester City FC',
+        id: 'MCI',
+      },
+      {
+        item: 'Everton FC',
+        id: 'EVE',
+      },
+      {
+        item: 'Tottenham Hotspur FC',
+        id: 'TOT',
+      },
+      {
+        item: 'Chelsea FC',
+        id: 'CHE',
+      },
+      {
+        item: 'Liverpool FC',
+        id: 'LIV',
+      },
+      {
+        item: 'Arsenal FC',
+        id: 'ARS',
+      },
+
+      {
+        item: 'Leicester City FC',
+        id: 'LEI',
+      },
+    ]
       
       return ( 
         <ScrollView style={styles.container} refreshControl={
@@ -208,6 +276,15 @@ class Agent extends React.Component {
           }>
           <Loader loading={this.state.isLoading} />
           <View style={styles.inputContainer}>
+            <Text style={{ fontSize: 20, paddingBottom: 10 }}>MultiSelect Demo</Text>
+            <SelectBox
+              label="Select multiple"
+              options={K_OPTIONS}
+              selectedValues={this.state.subSelectedItems}
+              onMultiSelect={this.onMultiChange()}
+              onTapClose={this.onMultiChange()}
+              isMulti
+            />
             <DropDownPicker
               items={this.state.collections}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
@@ -222,15 +299,13 @@ class Agent extends React.Component {
               placeholder= "Select Port Type"
               onChangeItem = {item => {
                 this.setState({isLoading: true, portType : item.value, calcType: null, calcCollection: null});
-                fetch(`${HOST}/api/getDoc/${item.value}`).then(
-                  response => response.json()).then(responseJson => {
-                    this.setState({
-                      isLoading: false,
-                      calcCollection: responseJson.map(item => {return {label: item.title, value: item.title}}),
-                    });
-                  }).catch(error => {
-                    console.log(error);
-                  });
+                let cCol = null;
+                if(item.value === "Paradeep" || item.value === "Tamil Nadu" || item.value === "Cochin" || item.value === "Kolkata" || item.value === "Visakapatnam" || item.value === "Chennai" || item.value == "New Mangalore" ){
+                  cCol = [{label: "Foreign", value: "Foreign"}, {label: "Coastal", value: "Coastal"}];
+                } else if(item.value === "Gopalapur"){
+                  cCol = [{label: "Vessel", value: "Vessel"}];
+                }
+                this.setState({isLoading: false, calcCollection: cCol});
               }}
             />
             {this.state.calcCollection!==null ?
@@ -458,7 +533,7 @@ class Agent extends React.Component {
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
               placeholder= "Select Port Dues Calculation Type"
-              onChangeItem = {item => this.setState({PilCanc: item.value})}
+              onChangeItem = {item => this.setState({pDueChoice: item.value})}
             />:null}
             <TouchableOpacity style={styles.proceedBtn} onPress={submit}>
               <Text style={styles.btnText}>Proceed</Text>

@@ -8,8 +8,8 @@ export function ForeignParadeep(portDueChoose, LGRT, HGRT, pilotageChoose, Shift
     let Pilotage = 0;
     if (pilotageChoose){
         Pilotage += Math.round(0.56207 * DollarVal * ((HGRT<=30000) ? HGRT : 30000));
-        Pilotage += Math.round(((0.44945 * ((HGRT>60000) ? 30000 : ((HGRT - 30000 > 0) ? (HGRT - 30000) : 0))) + ((HGRT>30000) ? 16862 : 0)) * DollarVal);
-        Pilotage += Math.round(((0.393 * ((HGRT>60000) ? (HGRT - 60000) : 0)) + ((HGRT>60000) ? 30345.5 : 0)) * DollarVal);
+        Pilotage += Math.round(((0.44945 * ((HGRT>60000) ? 30000 : ((HGRT - 30000 > 0) ? (HGRT - 30000) : 0)))) * DollarVal);
+        Pilotage += Math.round(((0.393 * ((HGRT>60000) ? (HGRT - 60000) : 0)) ) * DollarVal);
     }
     let ShiftingCost = Math.round(Shifting * (Pilotage/2));
     let TotalCharge = PortDues + BerthHire + WaterCharge + ShiftingCost + Pilotage + Garbage - Math.round(Cancellation);
@@ -38,8 +38,8 @@ export function CoastalParadeep(portDueChoose,LGRT, HGRT, pilotageChoose, Shifti
     let Pilotage = 0;
     if (pilotageChoose){
         Pilotage += Math.round(13.83 * ((HGRT<=30000) ? HGRT : 30000));
-        Pilotage += Math.round((11.06 * ((HGRT>60000) ? 30000 : ((HGRT - 30000 > 0) ? (HGRT - 30000) : 0))) + ((HGRT>30000) ? 414900 : 0));
-        Pilotage += Math.round((9.68 * ((HGRT>60000) ? (HGRT - 60000) : 0)) + ((HGRT>60000) ? 746700 : 0));
+        Pilotage += Math.round((11.06 * ((HGRT>60000) ? 30000 : ((HGRT - 30000 > 0) ? (HGRT - 30000) : 0))));
+        Pilotage += Math.round((9.68 * ((HGRT>60000) ? (HGRT - 60000) : 0)));
     }
     let WaterCharge = 0;
     if(WaterType == 0){WaterCharge = Math.round(108.66 * WaterUsage);}
@@ -139,20 +139,20 @@ export function TamilNadu(PortDueChoice, HGRT, BerthHireChoice, PilotageChoice, 
         if(BerthHireChoice){
             if(HGRT<=20000){BerthHire=Math.round(0.0075 * DollarVal * HGRT);}
             else if(HGRT>20000 && HGRT <=30000){BerthHire=Math.round(((0.0075 * 20000) + (0.0081 * (HGRT-20000)))*DollarVal);}
-            else if(HGRT>30000 && HGRT <=60000){BerthHire = Math.round((231 + (0.0081 * 10000) + (0.0075 * 20000) + (0.0065 * (HGRT-30000)))*DollarVal);}
-            else if(HGRT>60000){BerthHire = Math.round((231 + 426 + (0.0081 * 10000) + (0.0075 * 20000) + (0.0065 * 30000) + (0.0057 * (HGRT-60000)))*DollarVal);}
+            else if(HGRT>30000 && HGRT <=60000){BerthHire = Math.round(((0.0081 * 10000) + (0.0075 * 20000) + (0.0065 * (HGRT-30000)))*DollarVal);}
+            else if(HGRT>60000){BerthHire = Math.round(((0.0081 * 10000) + (0.0075 * 20000) + (0.0065 * 30000) + (0.0057 * (HGRT-60000)))*DollarVal);}
         }
         if(PilotageChoice){
             if(HGRT<=20000){Pilotage = Math.round(0.5162 * DollarVal * HGRT);}
             else if(HGRT>20000 && HGRT <=30000){Pilotage = Math.round(((0.5162 * 20000) + (0.5338 * (HGRT-20000)))*DollarVal);}
-            else if(HGRT>30000 && HGRT <=60000){Pilotage = Math.round((15662 + (0.5338 * 10000) + (0.5162 * 20000) + (0.427 * (HGRT-30000)))*DollarVal);}
-            else if(HGRT>60000){Pilotage = Math.round((15662 + 28472 + (0.5338 * 10000) + (0.5162 * 20000) + (0.427 * 30000) + (0.3737 * (HGRT-60000)))*DollarVal);}
+            else if(HGRT>30000 && HGRT <=60000){Pilotage = Math.round(((0.5338 * 10000) + (0.5162 * 20000) + (0.427 * (HGRT-30000)))*DollarVal);}
+            else if(HGRT>60000){Pilotage = Math.round(((0.5338 * 10000) + (0.5162 * 20000) + (0.427 * 30000) + (0.3737 * (HGRT-60000)))*DollarVal);}
         }
         if(ShiftingChoice){
             if(HGRT<=20000){shifting = Math.round(0.1807 * DollarVal * HGRT);}
             else if(HGRT>20000 && HGRT <=30000){shifting = Math.round(((0.1807 * 20000) + (0.1868 * (HGRT-20000)))*DollarVal);}
-            else if(HGRT>30000 && HGRT <=60000){shifting = Math.round((5482 + (0.1868 * 10000) + (0.1807 * 20000) + (0.1495 * (HGRT-30000)))*DollarVal);}
-            else if(HGRT>60000){shifting = Math.round((5482 + 9967 + (0.1868 * 10000) + (0.1807 * 20000) + (0.1495 * 30000) + (0.0057 * (HGRT-60000)))*DollarVal);}
+            else if(HGRT>30000 && HGRT <=60000){shifting = Math.round(((0.1868 * 10000) + (0.1807 * 20000) + (0.1495 * (HGRT-30000)))*DollarVal);}
+            else if(HGRT>60000){shifting = Math.round(((0.1868 * 10000) + (0.1807 * 20000) + (0.1495 * 30000) + (0.0057 * (HGRT-60000)))*DollarVal);}
         }
         if(AncHrs!=0){
             if(HGRT <= 3000){AnchorageCost = Math.round(0.000599 * DollarVal * HGRT * AncHrs);}
@@ -174,20 +174,20 @@ export function TamilNadu(PortDueChoice, HGRT, BerthHireChoice, PilotageChoice, 
         if(BerthHireChoice){
             if(HGRT<=20000){BerthHire=Math.round(0.1932 * HGRT);}
             else if(HGRT>20000 && HGRT <=30000){BerthHire=Math.round((0.1932 * 20000) + (0.2105 * (HGRT-20000)));}
-            else if(HGRT>30000 && HGRT <=60000){BerthHire = Math.round(5969 + (0.2105 * 10000) + (0.1932 * 20000) + (0.1684 * (HGRT-30000)));}
-            else if(HGRT>60000){BerthHire = Math.round(5969 + 11021 + (0.2105 * 10000) + (0.1932 * 20000) + (0.1684 * 30000) + (0.1474 * (HGRT-60000)));}
+            else if(HGRT>30000 && HGRT <=60000){BerthHire = Math.round((0.2105 * 10000) + (0.1932 * 20000) + (0.1684 * (HGRT-30000)));}
+            else if(HGRT>60000){BerthHire = Math.round((0.2105 * 10000) + (0.1932 * 20000) + (0.1684 * 30000) + (0.1474 * (HGRT-60000)));}
         }
         if(PilotageChoice){
             if(HGRT<=20000){Pilotage = Math.round(13.47 * HGRT);}
             else if(HGRT>20000 && HGRT <=30000){Pilotage = Math.round((13.47 * 20000) + (13.92 * (HGRT-20000)));}
-            else if(HGRT>30000 && HGRT <=60000){Pilotage = Math.round(408600 + (13.92 * 10000) + (13.47 * 20000) + (11.14 * (HGRT-30000)));}
-            else if(HGRT>60000){Pilotage = Math.round(408600 + 742800 + (13.92 * 10000) + (13.47 * 20000) + (11.14 * 30000) + (9.74 * (HGRT-60000)));}
+            else if(HGRT>30000 && HGRT <=60000){Pilotage = Math.round((13.92 * 10000) + (13.47 * 20000) + (11.14 * (HGRT-30000)));}
+            else if(HGRT>60000){Pilotage = Math.round((13.92 * 10000) + (13.47 * 20000) + (11.14 * 30000) + (9.74 * (HGRT-60000)));}
         }
         if(ShiftingChoice){
             if(HGRT<=20000){shifting = Math.round(4.71 * HGRT);}
             else if(HGRT>20000 && HGRT <=30000){shifting = Math.round((4.71 * 20000) + (4.87 * (HGRT-20000)));}
-            else if(HGRT>30000 && HGRT <=60000){shifting = Math.round(142900 + (4.87 * 10000) + (4.71 * 20000) + (3.9 * (HGRT-30000)));}
-            else if(HGRT>60000){shifting = Math.round(142900 + 259900 + (4.87 * 10000) + (4.71 * 20000) + (3.9 * 30000) + (3.41 * (HGRT-60000)));}
+            else if(HGRT>30000 && HGRT <=60000){shifting = Math.round((4.87 * 10000) + (4.71 * 20000) + (3.9 * (HGRT-30000)));}
+            else if(HGRT>60000){shifting = Math.round((4.87 * 10000) + (4.71 * 20000) + (3.9 * 30000) + (3.41 * (HGRT-60000)));}
         }
         if(AncHrs!=0){
             if(HGRT <= 3000){AnchorageCost = Math.round(0.0155 * HGRT * AncHrs);}
@@ -200,8 +200,8 @@ export function TamilNadu(PortDueChoice, HGRT, BerthHireChoice, PilotageChoice, 
         }
     }
     let TotalCharge = PortDues + BerthHire + Pilotage + shifting + AnchorageCost;
-    let CGSTCost = TotalCharge * CGST;
-    let SGSTCost = TotalCharge * SGST;
+    let CGSTCost = Math.round(TotalCharge * CGST);
+    let SGSTCost = Math.round(TotalCharge * SGST);
     let FinalCost = TotalCharge + CGSTCost + SGSTCost;
     return{
         calcVal:{
@@ -216,5 +216,59 @@ export function TamilNadu(PortDueChoice, HGRT, BerthHireChoice, PilotageChoice, 
         finalCost:{
         "Final Cost": FinalCost,},
         "portType" : "Tamil Nadu"
+    }
+}
+
+export function ForeignChidamparanar(PortDueChoice, HGRT, BerthHireChoice, subBerthHireChoice, BerthHrs, BerthVsslNo, PilotageChoice, PilotageVsslNo, ShiftingChoice, AncHrs, CGST, SGST, DollarVal, calcType){
+    let PortDues = 0;
+    let BerthHire = 0;
+    let Pilotage = 0;
+    let shifting = 0;
+    let AnchorageCost = 0;
+    let DetentionCost = 0;
+    let TugHireCost = 0;
+    if(calcType === "Foreign"){
+        if(PortDueChoice){
+            if(PortDueChoice == 0 || PortDueChoice == 2 || PortDueChoice == 4){
+                PortDues = Math.round(0.344 * HGRT * DollarVal);
+            } else if(PortDueChoice == 1 || PortDueChoice == 3){
+                PortDues = Math.round(0.055 * HGRT * DollarVal);
+            }
+        }
+        if(BerthHireChoice){
+            if(BerthHireChoice == 0){
+                BerthHire = Math.round(0.0024 * HGRT * DollarVal * BerthHrs[0]);
+            }else if(BerthHireChoice == 1){
+                if(subBerthHireChoice == 0 || subBerthHireChoice == 5){
+                    BerthHire = Math.round(0.0034 * HGRT * DollarVal * BerthHrs[1]);
+                }else if(subBerthHireChoice == 1 || subBerthHireChoice == 4){
+                    BerthHire = Math.round(4.26 * HGRT * DollarVal * BerthHrs[1] * BerthVsslNo);
+                }else if(subBerthHireChoice == 2){
+                    BerthHire = Math.round(0.68 * HGRT * DollarVal * BerthHrs[1] * BerthVsslNo);
+                }else if(subBerthHireChoice == 3){
+                    BerthHire = Math.round(0.33 * HGRT * DollarVal * BerthHrs[1] * BerthVsslNo);
+                }
+            }
+        }
+        if(PilotageChoice){
+            if(PilotageChoice == 0){
+                if(HGRT<=30000){Pilotage = Math.round(0.441 * HGRT * DollarVal);}
+                else if(HGRT>30000 && HGRT <=60000){Pilotage = Math.round((0.441 * 30000) + (0.353 * (HGRT-30000)) * DollarVal);}
+                else if(HGRT>60000){Pilotage = Math.round((0.441 * 30000) + (0.353 * 30000) + (0.309 * (HGRT-60000)) * DollarVal);}
+            }else if(PilotageChoice == 1){
+                Pilotage = Math.round(0.26 * HGRT * DollarVal);
+            }else if(PilotageChoice == 2){
+                if(HGRT<=200){Pilotage = Math.round(98 * DollarVal * PilotageVsslNo);}
+                else {Pilotage = Math.round(147 * DollarVal * PilotageVsslNo);}
+            }else if(PilotageChoice == 3){
+                Pilotage = Math.round(98 * PilotageVsslNo * DollarVal);
+            }else if(PilotageChoice == 4){
+                if(HGRT<=30000){Pilotage = Math.round(0.441 * HGRT * DollarVal);}
+                else if(HGRT>30000 && HGRT <=60000){Pilotage = Math.round((0.441 * 30000) + (0.353 * (HGRT-30000)) * DollarVal);}
+                else if(HGRT>60000){Pilotage = Math.round((0.441 * 30000) + (0.353 * 30000) + (0.309 * (HGRT-60000)) * DollarVal);}
+            }else if(PilotageChoice == 5){
+                Pilotage = Math.round(0.0025 * HGRT * DollarVal);
+            }
+        }
     }
 }

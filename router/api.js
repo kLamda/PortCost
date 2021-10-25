@@ -66,6 +66,11 @@ router.post('/getTime', (req, res) =>{
                         isExpImp: result.isExpImp,
                         isStevedore: result.isStevedore,
                     })
+                } else {
+                    res.json({
+                        status: "over",
+                        message: 'Access Days over',
+                    })
                 }
             } else {
                 res.json({status: false, message: "ID not found"})

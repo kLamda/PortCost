@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import LottiePreloader from './lottieLoader';
+import { Alert } from 'react-native';
 import { HOST } from './host';
 
 const SplashScreen = ({navigation}) => {
@@ -15,26 +16,20 @@ const SplashScreen = ({navigation}) => {
       }).then((responseO) => responseO.json())
       .then((responseOJSON) => {
         if(responseOJSON.status === true){
-          fetch(`${HOST}/api/getCol`).then(
-            (responseI) => responseI.json()).then(
-              (responseIJSON) => {
-                if(responseIJSON.status === true) {
-                  navigation.replace('SignedIn', {
-                  "user_id": responseOJSON.user_id,
-                  "userName": responseOJSON.userName,
-                  "daysLeft" : responseOJSON.daysLeft,
-                  "collection": responseIJSON.collection,
-                  "email" : responseOJSON.userEmail,
-                  "phone" : responseOJSON.phone,
-                  "isVesAgent" : responseOJSON.isVesAgent,
-                  "isExpImp" : responseOJSON.isExpImp,
-                  "isStevedore" : responseOJSON.isStevedore,
-                })
-                } else {
-                  navigation.replace('Signup')
-                  console.log("Inner fetch compromised");
-            }}).catch((error) => {console.log(error)});
+              navigation.replace('SignedIn', {
+              "user_id": responseOJSON.user_id,
+              "userName": responseOJSON.userName,
+              "daysLeft" : responseOJSON.daysLeft,
+              "email" : responseOJSON.userEmail,
+              "phone" : responseOJSON.phone,
+              "isVesAgent" : responseOJSON.isVesAgent,
+              "isExpImp" : responseOJSON.isExpImp,
+              "isStevedore" : responseOJSON.isStevedore,
+            })    
           }else{
+            if(responseOJSON.status === "over") {
+              Alert.alert("Your account has expired. Please contact the administrator.");
+            }
             navigation.replace('Signup')
             console.log("Outer fetch compromised");
           }
