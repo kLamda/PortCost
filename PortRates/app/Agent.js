@@ -1,7 +1,7 @@
 import React from "react";
 import { RefreshControl ,TouchableOpacity, View, Text, StyleSheet, StatusBar, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import DropDownPicker from "react-native-custom-dropdown";
-import {ForeignParadeep, CoastalParadeep, VesselGopalapur, TamilNadu} from "./helper.js";
+import {ForeignParadeep, CoastalParadeep, VesselGopalapur, TamilNadu, NewMangalore} from "./helper.js";
 import Loader from "./loader.js";
 import SelectBox from "react-native-multi-selectbox";
 import {xorBy} from "lodash";
@@ -59,6 +59,7 @@ class Agent extends React.Component {
           WtrUsg : 0,
           pDueChoice : 0,
           subSelectedItems: [],
+          mangaloreInput : {}
         }
     }
 
@@ -116,11 +117,22 @@ class Agent extends React.Component {
           {2: "Pilotage Fee", 3: "Shifting Charge"},
           {4: "SGST", 5: "CGST"},
           {6: "Anchorage"}]
+      } else if(port=="New Mangalore" && (calc=="Foreign" || calc=="Coastal")){
+        return [
+          {0: "Port Dues", 1: "Berth Hire"},
+          {2: "Pilotage Fee", 3: "Shifting Charge"},
+          {4: "Detention Charge", 5: "Tug Hire Charges"},
+          {6: "Anchorage"}
+        ]
       }
     }
 
     onMultiChange() {
       return (item) => this.setState({subSelectedItems: xorBy(this.state.subSelectedItems, [item], 'id')});
+    }
+
+    getArr(arr){
+      return Array.from(arr, x => x.id);
     }
 
     render() {
@@ -172,7 +184,7 @@ class Agent extends React.Component {
               this.state.checkBtn8 ? 0.09 : 0,  
               DollarVal);
               this.props.navigation.navigate('Result', {value: finalResult});
-            }
+            } 
           }
         } else if(this.state.portType == "Gopalapur"){
           let finalResult = VesselGopalapur(
@@ -209,64 +221,44 @@ class Agent extends React.Component {
           );
           this.props.navigation.navigate('Result', {value: finalResult});
           // console.log(finalResult);
+        } else if(this.state.portType==="New Mangalore"){
+          console.log("input", this.state.checkBtn1 ? this.state.mangaloreInput.PortDueChoice : false,
+            this.state.HGRT,
+            this.state.checkBtn2 ? this.state.mangaloreInput.BerthHireChoice : false,
+            this.state.mangaloreInput.hasOwnProperty('subBerthHireChoice') ? this.state.mangaloreInput.subBerthHireChoice : false,
+            this.state.checkBtn2 ? this.state.mangaloreInput.BerthHrs : 0,
+            this.state.mangaloreInput.hasOwnProperty('BerthVsslNo') ? this.state.mangaloreInput.BerthVsslNo : 0,
+            this.state.checkBtn3 ? this.getArr(this.state.mangaloreInput.PilotageChoice) : [],
+            this.state.mangaloreInput.hasOwnProperty('PilotageVsslNo') ? this.state.mangaloreInput.PilotageVsslNo : 0,
+            this.state.checkBtn4 ? this.getArr(this.state.mangaloreInput.ShiftingChoice) : [],
+            this.state.mangaloreInput.hasOwnProperty('ShiftingVsslNo') ? this.state.mangaloreInput.ShiftingVsslNo : 0,
+            this.state.checkBtn5 ? this.state.mangaloreInput.DetentionCharge : null,
+            this.state.checkBtn6 ? this.state.mangaloreInput.TugHireCharge : null,
+            this.state.checkBtn7 ? this.state.mangaloreInput.AncChoice : false,
+            this.state.checkBtn7 > 0 ? this.state.mangaloreInput.AncHrs : 0,
+            DollarVal,
+            this.state.calcType);
+          let finalResult = NewMangalore(
+            this.state.checkBtn1 ? this.state.mangaloreInput.PortDueChoice : false,
+            this.state.HGRT,
+            this.state.checkBtn2 ? this.state.mangaloreInput.BerthHireChoice : false,
+            this.state.mangaloreInput.hasOwnProperty('subBerthHireChoice') ? this.state.mangaloreInput.subBerthHireChoice : false,
+            this.state.checkBtn2 ? this.state.mangaloreInput.BerthHrs : 0,
+            this.state.mangaloreInput.hasOwnProperty('BerthVsslNo') ? this.state.mangaloreInput.BerthVsslNo : 0,
+            this.state.checkBtn3 ? this.getArr(this.state.mangaloreInput.PilotageChoice) : [],
+            this.state.mangaloreInput.hasOwnProperty('PilotageVsslNo') ? this.state.mangaloreInput.PilotageVsslNo : 0,
+            this.state.checkBtn4 ? this.getArr(this.state.mangaloreInput.ShiftingChoice) : [],
+            this.state.mangaloreInput.hasOwnProperty('ShiftingVsslNo') ? this.state.mangaloreInput.ShiftingVsslNo : 0,
+            this.state.checkBtn5 ? this.state.mangaloreInput.DetentionCharge : null,
+            this.state.checkBtn6 ? this.state.mangaloreInput.TugHireCharge : null,
+            this.state.checkBtn7 ? this.state.mangaloreInput.AncChoice : false,
+            this.state.checkBtn7 > 0 ? this.state.mangaloreInput.AncHrs : 0,
+            DollarVal,
+            this.state.calcType
+          );
+          this.props.navigation.navigate('Result', {value: finalResult});
         }
       }
-
-      const K_OPTIONS = [
-      {
-        item: 'Juventus',
-        id: 'JUVE',
-      },
-      {
-        item: 'Real Madrid',
-        id: 'RM',
-      },
-      {
-        item: 'Barcelona',
-        id: 'BR',
-      },
-      {
-        item: 'PSG',
-        id: 'PSG',
-      },
-      {
-        item: 'FC Bayern Munich',
-        id: 'FBM',
-      },
-      {
-        item: 'Manchester United FC',
-        id: 'MUN',
-      },
-      {
-        item: 'Manchester City FC',
-        id: 'MCI',
-      },
-      {
-        item: 'Everton FC',
-        id: 'EVE',
-      },
-      {
-        item: 'Tottenham Hotspur FC',
-        id: 'TOT',
-      },
-      {
-        item: 'Chelsea FC',
-        id: 'CHE',
-      },
-      {
-        item: 'Liverpool FC',
-        id: 'LIV',
-      },
-      {
-        item: 'Arsenal FC',
-        id: 'ARS',
-      },
-
-      {
-        item: 'Leicester City FC',
-        id: 'LEI',
-      },
-    ]
       
       return ( 
         <ScrollView style={styles.container} refreshControl={
@@ -276,15 +268,6 @@ class Agent extends React.Component {
           }>
           <Loader loading={this.state.isLoading} />
           <View style={styles.inputContainer}>
-            <Text style={{ fontSize: 20, paddingBottom: 10 }}>MultiSelect Demo</Text>
-            <SelectBox
-              label="Select multiple"
-              options={K_OPTIONS}
-              selectedValues={this.state.subSelectedItems}
-              onMultiSelect={this.onMultiChange()}
-              onTapClose={this.onMultiChange()}
-              isMulti
-            />
             <DropDownPicker
               items={this.state.collections}
               containerStyle={{height: 43, width: "90%", marginBottom: 20}}
@@ -532,9 +515,335 @@ class Agent extends React.Component {
                   color: '#000'
               }}
               dropDownStyle={{backgroundColor: '#D7E2FE'}}
-              placeholder= "Select Port Dues Calculation Type"
+              placeholder= "Enter Port Due choice"
               onChangeItem = {item => this.setState({pDueChoice: item.value})}
             />:null}
+            {this.state.portType=="New Mangalore" && <>
+              {this.state.checkBtn1 && <DropDownPicker
+                items={[
+                  {label: "Ship/Streamers", value: 0}, 
+                  {label: "Tugs/Launches/Sailing vessel/Barges", value: 1}, 
+                  {label: "Crude Oil Tanker at SPM", value: 2},
+                  {label: "Bunker Barge", value: 3},
+                  {label: "Vessel Calling for bunkering ar Berth", value: 4},
+                  {label: "Vessel Calling for bunkering at Anchorage", value: 5},
+                ]}
+                containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+                itemStyle={{
+                    justifyContent: 'center',
+                }}
+                labelStyle={{
+                    fontSize: 16,
+                    color: '#000'
+                }}
+                dropDownStyle={{backgroundColor: '#D7E2FE'}}
+                placeholder= "Select Calculation Type"
+                onChangeItem = {item => {
+                  let obj = this.state.mangaloreInput;
+                  obj['PortDueChoice'] = item.value;
+                  this.setState({mangaloreInput :obj});
+                }}
+                />}
+                
+                {this.state.checkBtn2 && <DropDownPicker
+                items={[
+                  {label: "Vessel", value: 0}, 
+                  {label: "Oil Tanker", value: 1}
+                ]}
+                containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+                itemStyle={{
+                    justifyContent: 'center',
+                }}
+                labelStyle={{
+                    fontSize: 16,
+                    color: '#000'
+                }}
+                dropDownStyle={{backgroundColor: '#D7E2FE'}}
+                placeholder= "Enter Berth Hire Choice"
+                onChangeItem = {item => {
+                  let obj = this.state.mangaloreInput;
+                  obj['BerthHireChoice'] = item.value;
+                  this.setState({mangaloreInput :obj});
+                }}
+                />}
+
+                {this.state.mangaloreInput.hasOwnProperty['BerthHireChoice'] && <TextInput
+                    style={styles.input}
+                    placeholder="Enter Berth Hours"
+                    keyboardType="numeric"
+                    onChangeText={BerthHrs => {
+                      let obj = this.state.mangaloreInput;
+                      obj['BerthHrs'] = BerthHrs;
+                      this.setState({mangaloreInput :obj});
+                    }}
+                    />}
+
+                {this.state.mangaloreInput.hasOwnProperty('BerthHireChoice') && this.state.mangaloreInput.BerthHireChoice == 1 && <DropDownPicker
+                items={[
+                  {label: "Tanker/Oil Tankers", value: 0}, 
+                  {label: "Sailing vessel/Barges/Tugs", value: 1}, 
+                  {label: "Fishing Vessel/Service Boat", value: 2},
+                  {label: "WOODEN ROWING BOAT W/WO AUXILIARY ENGINES", value: 3},
+                  {label: "Bunker Barge", value: 4},
+                  {label: "Vessel Calling for bunkering at Berth", value: 5},
+                ]}
+                containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+                itemStyle={{
+                    justifyContent: 'center',
+                }}
+                labelStyle={{
+                    fontSize: 16,
+                    color: '#000'
+                }}
+                dropDownStyle={{backgroundColor: '#D7E2FE'}}
+                placeholder= "Enter Sub Berth Hire Type"
+                onChangeItem = {item => {
+                  let obj = this.state.mangaloreInput;
+                  obj['subBerthHireChoice'] = item.value;
+                  this.setState({mangaloreInput :obj});
+                }}
+                />}
+                {this.state.checkBtn3 && <SelectBox
+                  label="Select the Pilotage"
+                  options={[
+                    {
+                      item: 'Pilotage Both Inward/Outward',
+                      id: 0,
+                    },
+                    {
+                      item: 'SPM',
+                      id: 1,
+                    },
+                    {
+                      item: "Barges/Tugs/Launches",
+                      id: 2
+                    },
+                    {
+                      item: "Bunker Barge",
+                      id: 3
+                    },
+                    {
+                      item: "Exclusively Calling at Berth",
+                      id: 4
+                    },
+                    {
+                      item: "Exclusively Calling at Anchorage",
+                      id: 5
+                    }
+                  ]}
+                  selectedValues={this.state.mangaloreInput.hasOwnProperty('PilotageChoice') ? this.state.mangaloreInput.PilotageChoice : []}
+                  onMultiSelect={(item)=>{
+                    let obj = this.state.mangaloreInput;
+                    obj['PilotageChoice'] = xorBy(obj.hasOwnProperty("PilotageChoice") ? obj.PilotageChoice : [], [item], 'id');
+                    this.setState({mangaloreInput :obj});
+                  }}
+                  onTapClose={(item)=>{
+                    let obj = this.state.mangaloreInput;
+                    obj['PilotageChoice'] = xorBy(obj.hasOwnProperty("PilotageChoice") ? obj.PilotageChoice : [], [item], 'id');
+                    this.setState({mangaloreInput :obj});
+                  }}
+                  isMulti
+                />}
+
+                {this.state.mangaloreInput.hasOwnProperty('PilotageChoice') &&  <>
+                  {this.state.mangaloreInput.PilotageChoice.some(item => item.id == 2) && <TextInput
+                    style={styles.input}
+                    placeholder="Enter Barges Vessels no"
+                    keyboardType="numeric"
+                    onChangeText={ShiftingVsslNo => {
+                      let obj = this.state.mangaloreInput;
+                      let arr = this.state.mangaloreInput.hasOwnProperty('PilotageVsslNo') ? this.state.mangaloreInput.PilotageVsslNo : new Array(4).fill(0);
+                      arr[0] = ShiftingVsslNo;
+                      obj['PilotageVsslNo'] = arr;
+                      this.setState({mangaloreInput :obj});
+                    }}/>}
+
+                  {this.state.mangaloreInput.PilotageChoice.some(item => item.id == 3) && <TextInput
+                    style={styles.input}
+                    placeholder="Enter Bunker Barge Vssl no"
+                    keyboardType="numeric"
+                    onChangeText={ShiftingVsslNo => {
+                      let obj = this.state.mangaloreInput;
+                      let arr = this.state.mangaloreInput.hasOwnProperty('PilotageVsslNo') ? this.state.mangaloreInput.PilotageVsslNo : new Array(4).fill(0);
+                      arr[1] = ShiftingVsslNo;
+                      obj['PilotageVsslNo'] = arr;
+                      this.setState({mangaloreInput :obj});
+                    }}/>}
+
+                  {this.state.mangaloreInput.PilotageChoice.some(item => item.id == 4) && <TextInput
+                    style={styles.input}
+                    placeholder="Enter Exclusive Calling at Berth Vessels no"
+                    keyboardType="numeric"
+                    onChangeText={ShiftingVsslNo => {
+                      let obj = this.state.mangaloreInput;
+                      let arr = this.state.mangaloreInput.hasOwnProperty('PilotageVsslNo') ? this.state.mangaloreInput.PilotageVsslNo : new Array(4).fill(0);
+                      arr[2] = ShiftingVsslNo;
+                      obj['PilotageVsslNo'] = arr;
+                      this.setState({mangaloreInput :obj});
+                    }}/>}
+
+                  {this.state.mangaloreInput.PilotageChoice.some(item => item.id == 5) && <TextInput
+                    style={styles.input}
+                    placeholder="Enter Exclusing Calling at Pilotage Vessels no"
+                    keyboardType="numeric"
+                    onChangeText={ShiftingVsslNo => {
+                      let obj = this.state.mangaloreInput;
+                      let arr = this.state.mangaloreInput.hasOwnProperty('PilotageVsslNo') ? this.state.mangaloreInput.PilotageVsslNo : new Array(4).fill(0);
+                      arr[3] = ShiftingVsslNo;
+                      obj['PilotageVsslNo'] = arr;
+                      this.setState({mangaloreInput :obj});
+                    }}/>}
+                </>}
+
+                {this.state.checkBtn4 && <SelectBox
+                  label="Select the Shifting"
+                  options={[
+                    {
+                      item: 'Pilotage Both Inward/Outward',
+                      id: 0,
+                    },
+                    {
+                      item: "Barges/Tugs/Launches",
+                      id: 1
+                    },
+                    {
+                      item: "Bunker Barge",
+                      id: 2
+                    },
+                    {
+                      item: "Exclusively Calling at Berth",
+                      id: 3
+                    },
+                    {
+                      item: "Exclusively Calling at Anchorage",
+                      id: 4
+                    }
+                  ]}
+                  selectedValues={this.state.mangaloreInput.hasOwnProperty('ShiftingChoice') ? this.state.mangaloreInput.PilotageChoice : []}
+                  onMultiSelect={(item)=>{
+                    let obj = this.state.mangaloreInput;
+                    obj['ShiftingChoice'] = xorBy(obj.hasOwnProperty("ShiftingChoice") ? obj.PilotageChoice : [], [item], 'id');
+                    this.setState({mangaloreInput :obj});
+                  }}
+                  onTapClose={(item)=>{
+                    let obj = this.state.mangaloreInput;
+                    obj['ShiftingChoice'] = xorBy(obj.hasOwnProperty("ShiftingChoice") ? obj.PilotageChoice : [], [item], 'id');
+                    this.setState({mangaloreInput :obj});
+                  }}
+                  isMulti
+                />}
+
+                {this.state.mangaloreInput.hasOwnProperty('ShiftingChoice') && this.state.mangaloreInput.ShiftingChoice === 1 && <TextInput
+                  style={styles.input}
+                  placeholder="Enter Shifting Number of Vessels"
+                  keyboardType="numeric"
+                  onChangeText={ShiftingVsslNo => {
+                    let obj = this.state.mangaloreInput;
+                    obj['ShiftingVsslNo'] = ShiftingVsslNo;
+                    this.setState({mangaloreInput :obj});
+                  }}
+                />}
+
+                {this.state.checkBtn5 && <DropDownPicker
+                items={this.state.calcType==="Foreign" ? [
+                  {label: "103.22$", value: Math.round(103.22 * DollarVal)}, 
+                  {label: "51.62$", value: Math.round(51.62 * DollarVal)},
+                  {label: "43.01$", value: Math.round(43.01 * DollarVal)},
+                ]:[
+                  {label: "2759", value: 2759},
+                  {label: "1379", value: 1379},
+                  {label: "1149", value: 1149},
+                ]}
+                containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+                itemStyle={{
+                    justifyContent: 'center',
+                }}
+                labelStyle={{
+                    fontSize: 16,
+                    color: '#000'
+                }}
+                dropDownStyle={{backgroundColor: '#D7E2FE'}}
+                placeholder= "Choose Detention Charge"
+                onChangeItem = {item => {
+                  let obj = this.state.mangaloreInput;
+                  obj['DetentionCharge'] = item.value;
+                  this.setState({mangaloreInput :obj});
+                }}
+                />}
+
+                {this.state.checkBtn6 && <DropDownPicker
+                items={this.state.calcType==="Foreign" ? [
+                  {label: "1280$ (SPM Operation)", value: Math.round(1280 * DollarVal)}, 
+                  {label: "240$ (Other than SPM)", value: Math.round(240 * DollarVal)},
+                  {label: "69$ (Pilot Launches)", value: Math.round(69 * DollarVal)},
+                  {label: "57$ (Mooring Launches)", value: Math.round(57 * DollarVal)},
+                  {label: "49$", value: Math.round(49 * DollarVal)},
+                  {label: "98$", value: Math.round(98 * DollarVal)},
+                  {label: "50$", value: Math.round(50 * DollarVal)},
+                  {label: "8$", value: Math.round(8 * DollarVal)},
+                  {label: "16$", value: Math.round(16 * DollarVal)}
+                ]:[
+                  {label: "48000 (SPM Operation)", value: 48000},
+                  {label: "10000 (Other than SPM)", value: 10000},
+                  {label: "2890 (Pilot Launches)", value: 2890},
+                  {label: "2390 (Mooring Launches)", value: 2390},
+                  {label: "2050", value: 2050},
+                  {label: "4100", value: 4100},
+                  {label: "2100", value: 2100},
+                  {label: "335", value: 335},
+                  {label: "671", value: 671}
+                ]}
+                containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+                itemStyle={{
+                    justifyContent: 'center',
+                }}
+                labelStyle={{
+                    fontSize: 16,
+                    color: '#000'
+                }}
+                dropDownStyle={{backgroundColor: '#D7E2FE'}}
+                placeholder= "Choose Tug Hire Charge"
+                onChangeItem = {item => {
+                  let obj = this.state.mangaloreInput;
+                  obj['TugHireCharge'] = item.value;
+                  this.setState({mangaloreInput :obj});
+                }}
+                />}
+
+                {this.state.checkBtn7 && <DropDownPicker
+                items={[
+                  {label: "Liquid Cargo Vessel", value: 0}, 
+                  {label: "Other Vessel", value: 1}
+                ]}
+                containerStyle={{height: 43, width: "90%", marginBottom: 20}}
+                itemStyle={{
+                    justifyContent: 'center',
+                }}
+                labelStyle={{
+                    fontSize: 16,
+                    color: '#000'
+                }}
+                dropDownStyle={{backgroundColor: '#D7E2FE'}}
+                placeholder= "Enter Anchorage Type"
+                onChangeItem = {item => {
+                  let obj = this.state.mangaloreInput;
+                  obj['AncChoice'] = item.value;
+                  this.setState({mangaloreInput :obj});
+                }}
+                />}
+
+                {this.state.mangaloreInput.hasOwnProperty('AncChoice') && <TextInput
+                  style={styles.input}
+                  placeholder="Input Anchorage Hours"
+                  keyboardType="numeric"
+                  onChangeText={AncHrs => {
+                    let obj = this.state.mangaloreInput;
+                    obj['AncHrs'] = AncHrs;
+                    this.setState({mangaloreInput :obj});
+                  }}
+                />}
+
+              </>}
             <TouchableOpacity style={styles.proceedBtn} onPress={submit}>
               <Text style={styles.btnText}>Proceed</Text>
             </TouchableOpacity>
